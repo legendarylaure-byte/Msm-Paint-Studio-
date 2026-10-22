@@ -1,0 +1,460 @@
+@import "tailwindcss";
+
+/* ————————————————————————————————————————————————
+   THEME TOKENS
+   Light is default. Toggle writes data-theme="dark" on <html>.
+   Surface/text/border flip; brand colours stay fixed.
+———————————————————————————————————————————————— */
+:root {
+  --surface: #fffdf7;
+  --surface-2: #f6f2e9;
+  --card: #ffffff;
+  --ink: #16162a;
+  --ink-soft: #4a4a63;
+  --ink-mute: #6a6a84;
+  --line: #ebe7dd;
+  --night: #16162a;
+  --onnight: #fffdf7;
+  --edge: #16162a;
+  --blob: 0.14;
+  /* tangerine for TEXT on themed surfaces — deepened for AA on light */
+  --accent: #b53a0d;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --surface: #0f1020;
+  --surface-2: #15162a;
+  --card: #1a1b2e;
+  --ink: #f2efe8;
+  --ink-soft: #c2bfd2;
+  --ink-mute: #9a97ad;
+  --line: rgba(255, 255, 255, 0.1);
+  --night: #08080f;
+  --onnight: #f5f2ea;
+  --edge: #34354d;
+  --blob: 0.1;
+  --accent: #ff8a5c;
+  color-scheme: dark;
+}
+
+@theme inline {
+  /* themed */
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-line: var(--line);
+  --color-night: var(--night);
+  --color-onnight: var(--onnight);
+  --color-edge: var(--edge);
+  --color-accent: var(--accent);
+
+  /* one family, weight does the work — smaller payload, cleaner corporate voice */
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  /* fixed brand — identical in both themes */
+  --color-tangerine: #ff6b35;
+  --color-tangerine-dark: #e5521d;
+  --color-sunshine: #ffc93c;
+  --color-sky: #4ea8de;
+  --color-sky-dark: #2b87bd;
+  --color-lime: #7bd389;
+  --color-lime-dark: #4fb96a;
+  --color-berry: #ef476f;
+  /* readable red for error text on tinted surfaces */
+  --color-berry-dark: #a8203f;
+  /* dark text for light brand fills (lime, sunshine) — fixed in both themes */
+  --color-onbrand: #16162a;
+  /* tangerine for text on always-dark panels (fixed, both themes) */
+  --color-accent-dark: #ff8a5c;
+
+  /* fluid type scale */
+  --text-h1: clamp(2.5rem, 6.2vw, 4.3rem);
+  --text-h1--line-height: 1.04;
+  --text-h1--letter-spacing: -0.032em;
+  --text-h2: clamp(1.95rem, 4.2vw, 3rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.028em;
+  --text-h3: clamp(1.28rem, 1.1rem + 0.75vw, 1.6rem);
+  --text-h3--line-height: 1.24;
+  --text-h3--letter-spacing: -0.018em;
+
+  /* motion */
+  --ease-brush: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-splash: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-drift: drift 12s ease-in-out infinite;
+  --animate-sweep: sweep 1.15s var(--ease-brush) both;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -22px, 0) scale(1.04);
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  /* clip, not hidden: hidden creates a scroll container and can break the sticky header */
+  overflow-x: clip;
+  transition:
+    background-color 0.4s var(--ease-brush),
+    color 0.4s var(--ease-brush);
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.028em;
+  line-height: 1.08;
+}
+
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.018em;
+  line-height: 1.24;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--color-sunshine);
+  color: #16162a;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--ink-mute) 45%, transparent);
+  border-radius: 99px;
+  border: 3px solid var(--surface);
+}
+
+/* ————————————————————————————————————————————————
+   TEXT
+———————————————————————————————————————————————— */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* the one accent, two-stop — tangerine, never a rainbow */
+.gradient-text {
+  background: linear-gradient(100deg, var(--accent) 0%, var(--color-tangerine-dark) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* one eyebrow treatment everywhere */
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+/* ————————————————————————————————————————————————
+   BUTTONS — one system, three sizes
+———————————————————————————————————————————————— */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-weight: 800;
+  text-align: center;
+  transition:
+    transform 0.25s var(--ease-brush),
+    background-color 0.3s var(--ease-brush),
+    color 0.3s var(--ease-brush),
+    border-color 0.3s var(--ease-brush),
+    box-shadow 0.3s var(--ease-brush);
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  transform: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-primary {
+  background: var(--color-tangerine);
+  color: var(--color-onbrand);
+  padding: 0.95rem 2rem;
+  box-shadow: 0 18px 40px -18px rgba(255, 107, 53, 0.95);
+}
+.btn-primary:hover {
+  background: var(--color-tangerine-dark);
+  box-shadow: 0 22px 46px -18px rgba(229, 82, 29, 0.95);
+}
+
+.btn-dark {
+  background: var(--night);
+  color: var(--onnight);
+  padding: 0.95rem 2rem;
+}
+.btn-dark:hover {
+  background: var(--color-tangerine);
+  color: var(--color-onbrand);
+}
+
+.btn-ghost {
+  padding: 0.9rem 1.75rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  color: var(--ink);
+}
+.btn-ghost:hover {
+  background: var(--night);
+  color: var(--onnight);
+  border-color: var(--night);
+}
+
+/* same ghost, for always-dark panels */
+.btn-ghost-invert {
+  padding: 0.9rem 1.75rem;
+  border: 1px solid color-mix(in srgb, #ffffff 28%, transparent);
+  color: var(--onnight);
+}
+.btn-ghost-invert:hover {
+  background: var(--onnight);
+  color: var(--night);
+  border-color: var(--onnight);
+}
+
+.btn-sm {
+  padding: 0.58rem 1.35rem;
+  font-size: 0.9rem;
+}
+
+/* ————————————————————————————————————————————————
+   LIQUID GLASS  — floating chrome only (header, bars, badges)
+———————————————————————————————————————————————— */
+.glass {
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--card) 72%, transparent) 0%,
+    color-mix(in srgb, var(--card) 46%, transparent) 100%
+  );
+  /* both forms on purpose: Lightning CSS downlevels to -webkit- only otherwise,
+     and modern Chrome no longer honours that alias. */
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 70%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--ink) 6%, transparent),
+    0 16px 40px -20px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.glass-strong {
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--card) 86%, transparent) 0%,
+    color-mix(in srgb, var(--card) 64%, transparent) 100%
+  );
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid color-mix(in srgb, #ffffff 22%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 85%, transparent),
+    0 24px 60px -28px color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+/* ————————————————————————————————————————————————
+   WET-GLOSS  — fresh-enamel sheen on primary actions
+———————————————————————————————————————————————— */
+.gloss {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.gloss::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.12) 34%,
+    rgba(255, 255, 255, 0) 60%
+  );
+}
+.gloss::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  z-index: 2;
+  width: 45%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  transition: left 0.75s var(--ease-brush);
+}
+.gloss:hover::after {
+  left: 130%;
+}
+
+/* ————————————————————————————————————————————————
+   MOTION UTILITIES
+———————————————————————————————————————————————— */
+.card-lift {
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent),
+    0 14px 30px -20px color-mix(in srgb, var(--ink) 30%, transparent);
+  transition:
+    transform 0.55s var(--ease-brush),
+    box-shadow 0.55s var(--ease-brush),
+    border-color 0.55s var(--ease-brush),
+    background-color 0.55s var(--ease-brush);
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 2px 4px color-mix(in srgb, var(--ink) 8%, transparent),
+    0 28px 54px -24px color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+/* ————————————————————————————————————————————————
+   SCROLL-DRIVEN SECTION TRANSITIONS
+   Native `animation-timeline: view()` — scrub off the main thread,
+   no scroll listeners. Browsers without it simply show the settled state.
+———————————————————————————————————————————————— */
+.paint-seam {
+  transform-origin: bottom center;
+  will-change: transform;
+}
+.paint-seam-down {
+  transform-origin: top center;
+}
+
+@keyframes seam-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* a paint edge grows out of the section as it enters */
+    .paint-seam {
+      animation: seam-grow linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 12%;
+    }
+    /* a hairline draws across the top of a section */
+    .scrub-rule {
+      transform-origin: left center;
+      animation: rule-draw linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 8%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paint-seam,
+  .scrub-rule {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: -60px;
+  transform: translateX(-50%);
+  z-index: 200;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  /* Motion drives opacity/transform/clip-path as inline styles and WAAPI
+     animations, which the rules above don't touch. Force the settled state
+     so those elements are simply there, never animated. */
+  [data-motion] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
