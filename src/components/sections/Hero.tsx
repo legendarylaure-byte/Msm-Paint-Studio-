@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform, type MotionStyle } from "motion/react";
+import { useCallback, useRef, useState, type CSSProperties } from "react";
 import {
   ArrowRight,
   Sparkles,
@@ -10,11 +9,13 @@ import {
   BadgeCheck,
   Palette,
   MapPin,
+  Brush,
+  Check,
 } from "lucide-react";
 import { site } from "@/lib/site";
+import { palette, rooms, type RoomId } from "@/lib/paint";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
-import { Reveal } from "@/components/ui/Reveal";
-import { photo, dullStyle } from "@/lib/photo";
+import { RoomStage } from "@/components/hero/RoomStage";
 
 const headline = ["Painting", "that", "makes", "a", "house", "feel", "like", "home"];
 
@@ -25,183 +26,208 @@ const trustItems = [
   { icon: MapPin, label: "Berwick-based, all of Casey" },
 ];
 
-const grain =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
-
-/**
- * Tall, rough-edged brush shape. Rendered at 200% width, so sliding its
- * position from 100% to 0% rolls the painted layer across the frame with a
- * wavy edge — one static mask, no per-frame filters.
- */
-const brushMask =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' preserveAspectRatio='none'%3E%3Cpath fill='%23000' d='M0 0h102c6 20-4 32 2 52s-5 34 2 54-4 32 2 50 1 24 0 44H0z'/%3E%3C/svg%3E\")";
-
-const photoSizes = "(min-width: 1024px) 54vw, 100vw";
+/** Relative luminance — decides whether the tick on a swatch is ink or chalk. */
+function isLight(hex: string) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.55;
+}
 
 export function Hero() {
   const reduce = useReducedMotionSafe();
-  const { scrollY } = useScroll();
+  const [room, setRoom] = useState<RoomId>("living");
+  const [wall, setWall] = useState<string>(palette[1].hex);
+  const [pending, setPending] = useState<string | null>(null);
+  const pendingRef = useRef<string | null>(null);
 
-  // Starts 80% painted with a brush edge on the right; the first scroll
-  // completes the roll. Reverses if you scroll back up.
-  const maskPos = useTransform(scrollY, [0, 360], ["20% 0%", "0% 0%"]);
-  const photoY = useTransform(scrollY, [0, 700], ["0%", "5%"]);
+  const pick = (hex: string) => {
+    if (hex === (pendingRef.current ?? wall)) return;
+    if (reduce) {
+      setWall(hex);
+      setPending(null);
+      pendingRef.current = null;
+      return;
+    }
+    pendingRef.current = hex;
+    setPending(hex);
+  };
 
-  const maskStyle: MotionStyle | undefined = reduce
-    ? undefined
-    : {
-        maskImage: brushMask,
-        WebkitMaskImage: brushMask,
-        maskSize: "200% 100%",
-        WebkitMaskSize: "200% 100%",
-        maskRepeat: "no-repeat",
-        WebkitMaskRepeat: "no-repeat",
-        maskPosition: maskPos,
-        WebkitMaskPosition: maskPos,
-      };
+  // the wet coat has finished rolling: promote it to the base coat
+  const done = useCallback(() => {
+    const p = pendingRef.current;
+    pendingRef.current = null;
+    if (p) setWall(p);
+    setPending(null);
+  }, []);
+
+  const active = pending ?? wall;
+  const activeName = palette.find((c) => c.hex === active)?.name ?? "Custom";
 
   return (
-    <section className="relative overflow-hidden pt-10 pb-20 sm:pt-16 lg:pt-16 lg:pb-24">
-      {/* one restrained ambient tint behind the fold */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute -top-32 -right-24 h-[440px] w-[440px] rounded-full bg-tangerine blur-3xl animate-drift"
-          style={{ opacity: "var(--blob)" }}
-        />
-      </div>
+    <section className="relative">
+      <div className="relative isolate overflow-hidden bg-surface">
+        {/* ——— the room ——— */}
+        <div className="relative h-[38svh] min-h-[280px] sm:h-[46svh] lg:absolute lg:inset-0 lg:h-full lg:min-h-0">
+          <RoomStage wall={wall} pending={pending} onDone={done} room={room} />
 
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14">
-        {/* ————— Copy ————— */}
-        <div>
-          <motion.div
-            data-motion
-            initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 rounded-full border border-tangerine/25 bg-tangerine/10 px-4 py-2 text-accent"
-          >
-            <Sparkles className="h-4 w-4" />
-            <span className="eyebrow">Berwick VIC · Free quotes</span>
-          </motion.div>
+          {/* text scrim — desktop only, the mobile copy sits on its own sheet */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 hidden lg:block"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--surface) 0%, var(--surface) 38%, rgb(var(--scrim) / 0.72) 50%, rgb(var(--scrim) / 0) 66%)",
+            }}
+          />
 
-          <h1 className="mt-6 text-h1 font-extrabold">
-            {headline.map((word, i) => (
-              <motion.span
-                key={word + i}
-                data-motion
-                initial={reduce ? false : { clipPath: "inset(0 100% 0 0)", opacity: 0 }}
-                animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
-                transition={{ delay: 0.15 + i * 0.06, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className={`mr-[0.28em] inline-block ${
-                  word === "home" ? "gradient-text" : "text-ink"
+          {/* room switcher — outside the stage so the pointer comes back */}
+          <div className="absolute top-4 right-4 z-20 flex gap-0.5 rounded-full border border-white/25 bg-black/35 p-1 backdrop-blur-md lg:top-6 lg:right-8">
+            {rooms.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => setRoom(r.id)}
+                aria-pressed={room === r.id}
+                className={`rounded-full px-3 py-1.5 text-xs font-extrabold tracking-wide transition-colors ${
+                  room === r.id ? "bg-white text-ink" : "text-white/80 hover:text-white"
                 }`}
               >
-                {word}
-              </motion.span>
+                {r.short}
+              </button>
             ))}
-          </h1>
+          </div>
 
-          <motion.p
-            data-motion
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft"
-          >
-            <strong className="text-ink">Hands-on craft</strong>, prepped properly
-            and painted beautifully. Interiors, exteriors, fences, shops and
-            warehouses — cleaned up completely.
-          </motion.p>
-
-          <motion.div
-            data-motion
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.6 }}
-            className="mt-8 flex flex-wrap items-center gap-3"
-          >
-            <Link href="/#book" className="btn btn-primary gloss group">
-              <span className="relative z-10 flex items-center gap-2">
-                Book a free quote
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-
-            <a href={site.phoneHref} className="btn btn-ghost">
-              {site.phone}
-            </a>
-          </motion.div>
+          {/* no brush on touch — point at the swatches instead */}
+          <p className="pointer-events-none absolute bottom-9 left-4 z-20 rounded-full border border-white/25 bg-black/35 px-3 py-1.5 text-xs font-bold text-white/90 backdrop-blur-md lg:hidden">
+            Pick a colour below ↓
+          </p>
         </div>
 
-        {/* ————— Photo: the paint rolls across it as you scroll ————— */}
-        <motion.div
-          data-motion
-          initial={reduce ? false : { opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
+        {/* ——— copy sheet ——— */}
+        <div
+          className={`relative z-10 -mt-7 rounded-t-[32px] bg-surface lg:mt-0 lg:flex lg:min-h-[min(78svh,780px)] lg:items-center lg:rounded-none lg:bg-transparent ${
+            reduce ? "" : "transition-colors duration-500"
+          }`}
         >
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] border-[3px] border-edge bg-surface-2 shadow-[0_40px_80px_-40px_rgba(22,22,42,0.7)] sm:aspect-[5/4]">
-            <motion.div style={reduce ? undefined : { y: photoY }} className="absolute inset-0">
-              {/* dull room — always underneath */}
-              <div className="absolute inset-0 scale-[1.16]" aria-hidden>
-                <Image
-                  src={photo.src}
-                  alt=""
-                  fill
-                  sizes={photoSizes}
-                  className="object-cover"
-                  style={dullStyle}
-                />
-                <div className="absolute inset-0 bg-[#5b574d]/25 mix-blend-multiply" />
+          <div className="mx-auto w-full max-w-7xl px-5 pt-8 pb-10 sm:px-8 lg:py-0">
+            <div className="lg:max-w-xl">
+              <div
+                className="rise inline-flex items-center gap-2 rounded-full border border-tangerine/25 bg-tangerine/10 px-4 py-2 text-accent"
+                style={{ "--d": "40ms" } as CSSProperties}
+              >
+                <Sparkles className="h-4 w-4" />
+                <span className="eyebrow">Berwick VIC · Free colour advice</span>
               </div>
 
-              {/* freshly painted room — revealed by the brush edge */}
-              <motion.div className="absolute inset-0 scale-[1.16]" style={maskStyle}>
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  priority
-                  sizes={photoSizes}
-                  className="object-cover"
-                />
-              </motion.div>
-            </motion.div>
+              <h1 className="mt-6 text-h1 font-extrabold">
+                {headline.map((word, i) => (
+                  <span
+                    key={word + i}
+                    className={`rise-word mr-[0.26em] ${
+                      word === "home" ? "gradient-text" : "text-ink"
+                    }`}
+                    style={{ "--i": i } as CSSProperties}
+                  >
+                    {word}
+                  </span>
+                ))}
+              </h1>
 
-            {/* fine grain so it reads as a printed photograph, not a stock tile */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-overlay"
-              style={{ backgroundImage: grain, backgroundSize: "160px" }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#16162a]/45 to-transparent"
-            />
-            {/* shortcut: stock placeholder — delete this credit with the photo */}
-            <span className="pointer-events-none absolute right-3 bottom-2.5 text-[10px] font-semibold tracking-wide text-white/70">
-              {photo.credit}
-            </span>
+              <p
+                className="rise mt-5 max-w-lg text-base leading-relaxed text-ink-soft sm:text-lg"
+                style={{ "--d": "420ms" } as CSSProperties}
+              >
+                <strong className="text-ink">Hands-on craft</strong>, prepped properly and painted
+                beautifully — interiors, exteriors, fences and shops, cleaned up completely.
+              </p>
+
+              <div
+                className="rise mt-6 flex flex-wrap items-center gap-3 sm:mt-8"
+                style={{ "--d": "500ms" } as CSSProperties}
+              >
+                <Link href="/#book" className="btn btn-primary gloss group">
+                  <span className="relative z-10 flex items-center gap-2">
+                    Book a free quote
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Link>
+                <a href={site.phoneHref} className="btn btn-ghost">
+                  {site.phone}
+                </a>
+              </div>
+
+              {/* ——— palette ——— */}
+              <div className="rise mt-7 sm:mt-9" style={{ "--d": "580ms" } as CSSProperties}>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-ink-mute">
+                    <Brush className="h-3.5 w-3.5" />
+                    Paint these walls
+                  </p>
+                  <p className="hidden text-xs font-semibold text-ink-mute sm:block">
+                    move the brush across the room
+                  </p>
+                </div>
+
+                <div
+                  role="group"
+                  aria-label="Wall colour"
+                  className="mt-3 flex flex-wrap gap-2.5"
+                >
+                  {palette.map((c) => {
+                    const on = c.hex === active;
+                    return (
+                      <button
+                        key={c.hex}
+                        type="button"
+                        onClick={() => pick(c.hex)}
+                        aria-pressed={on}
+                        title={c.name}
+                        className={`grid h-10 w-10 place-items-center rounded-full border transition-[transform,border-color,box-shadow] duration-200 ${
+                          on
+                            ? "-translate-y-0.5 border-ink shadow-[0_6px_16px_-6px_rgba(0,0,0,0.5)]"
+                            : "border-black/15 hover:-translate-y-0.5"
+                        }`}
+                        style={{ background: c.hex }}
+                      >
+                        {on ? (
+                          <Check
+                            className="h-4 w-4"
+                            strokeWidth={3.5}
+                            style={{ color: isLight(c.hex) ? "#16162a" : "#fffdf7" }}
+                            aria-hidden
+                          />
+                        ) : null}
+                        <span className="sr-only">{c.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <p aria-live="polite" className="mt-2.5 text-xs text-ink-mute">
+                  {activeName} · screen colour is a guide — we&apos;ll bring the fan deck to
+                  the quote.
+                </p>
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      {/* ————— Trust bar ————— */}
-      <div className="mx-auto mt-14 max-w-7xl px-5 sm:px-8">
-        <Reveal>
-          <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-4">
-            {trustItems.map((t) => (
-              <li
-                key={t.label}
-                className="flex items-center gap-3 bg-card px-5 py-4 transition-colors duration-300 hover:bg-surface-2"
-              >
-                <t.icon className="h-5 w-5 shrink-0 text-accent" strokeWidth={2.2} />
-                <span className="text-sm font-bold leading-tight text-ink">{t.label}</span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+      {/* ——— trust bar ——— */}
+      <div className="mx-auto max-w-7xl px-5 pb-14 sm:px-8 lg:pb-20">
+        <ul className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-4">
+          {trustItems.map((t) => (
+            <li
+              key={t.label}
+              className="flex items-center gap-3 bg-card px-5 py-4 transition-colors duration-300 hover:bg-surface-2"
+            >
+              <t.icon className="h-5 w-5 shrink-0 text-accent" strokeWidth={2.2} />
+              <span className="text-sm font-bold leading-tight text-ink">{t.label}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

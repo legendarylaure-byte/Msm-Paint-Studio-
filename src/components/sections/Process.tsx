@@ -45,7 +45,7 @@ export function Process() {
                 <li key={s.step} className="relative pl-20 sm:grid sm:grid-cols-2 sm:gap-16 sm:pl-0">
                   {/* node */}
                   <span
-                    className="absolute left-0 top-1 z-10 grid h-14 w-14 place-items-center rounded-2xl border-[5px] border-onnight bg-tangerine font-display text-lg font-extrabold text-onbrand shadow-lg sm:left-1/2 sm:-translate-x-1/2"
+                    className="absolute left-0 top-1 z-10 grid h-14 w-14 place-items-center rounded-2xl border-[5px] border-surface bg-tangerine font-display text-lg font-extrabold text-onbrand shadow-lg sm:left-1/2 sm:-translate-x-1/2"
                   >
                     {s.step}
                   </span>

@@ -7,33 +7,38 @@
 ———————————————————————————————————————————————— */
 :root {
   --surface: #fffdf7;
-  --surface-2: #f6f2e9;
+  /* the second band: a real tonal step, not #ffffff against #fffdf7 */
+  --surface-2: #f4efe3;
   --card: #ffffff;
   --ink: #16162a;
   --ink-soft: #4a4a63;
   --ink-mute: #6a6a84;
-  --line: #ebe7dd;
-  --night: #16162a;
+  --line: #e7e1d3;
+  /* warmed so the near-black stops fighting the cream */
+  --night: #17161f;
   --onnight: #fffdf7;
   --edge: #16162a;
   --blob: 0.14;
+  /* hero scrim, as bare rgb so the alpha stays tunable */
+  --scrim: 255 253 247;
   /* tangerine for TEXT on themed surfaces — deepened for AA on light */
   --accent: #b53a0d;
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --surface: #0f1020;
-  --surface-2: #15162a;
-  --card: #1a1b2e;
+  --surface: #141320;
+  --surface-2: #1a1927;
+  --card: #1d1c2b;
   --ink: #f2efe8;
-  --ink-soft: #c2bfd2;
-  --ink-mute: #9a97ad;
-  --line: rgba(255, 255, 255, 0.1);
-  --night: #08080f;
+  --ink-soft: #c6c3d4;
+  --ink-mute: #9d9ab0;
+  --line: rgba(255, 255, 255, 0.12);
+  --night: #0b0a12;
   --onnight: #f5f2ea;
   --edge: #34354d;
   --blob: 0.1;
+  --scrim: 20 19 32;
   --accent: #ff8a5c;
   color-scheme: dark;
 }
@@ -391,15 +396,6 @@ p {
   }
 }
 
-@keyframes rule-draw {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     /* a paint edge grows out of the section as it enters */
@@ -408,21 +404,152 @@ p {
       animation-timeline: view();
       animation-range: cover 0% cover 12%;
     }
-    /* a hairline draws across the top of a section */
-    .scrub-rule {
-      transform-origin: left center;
-      animation: rule-draw linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 8%;
-    }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .paint-seam,
-  .scrub-rule {
+  .paint-seam {
     animation: none !important;
     transform: none !important;
+  }
+}
+
+/* ————————————————————————————————————————————————
+   HERO ROOM STAGE — paint preview
+———————————————————————————————————————————————— */
+/* room surfaces — light theme is a morning room, dark theme is evening */
+.stage {
+  --room-ceiling: #fdfaf3;
+  --room-ceiling-2: #efe9dc;
+  --room-floor-a: #c8a982;
+  --room-floor-b: #a8845f;
+  --room-furniture: #ece5d8;
+  --room-furniture-2: #dbd1c1;
+  --room-trim: #fbf8f1;
+  --room-rug: #cbbda6;
+  --room-plant: #7f8a6a;
+  --room-lamp: #f2e6cf;
+  --room-sky-a: #cfe0e8;
+  --room-sky-b: #eef2e9;
+  --room-shadow: 0.32;
+}
+
+[data-theme="dark"] .stage {
+  --room-ceiling: #2b2937;
+  --room-ceiling-2: #201e2b;
+  --room-floor-a: #4c4038;
+  --room-floor-b: #332b25;
+  --room-furniture: #3b3849;
+  --room-furniture-2: #2e2b3a;
+  --room-trim: #3a3747;
+  --room-rug: #464156;
+  --room-plant: #4a5546;
+  --room-lamp: #6b5f4a;
+  --room-sky-a: #2b3a52;
+  --room-sky-b: #4a4560;
+  --room-shadow: 0.6;
+}
+
+/* the native pointer only disappears on fine-pointer devices that opt in */
+.stage,
+.stage * {
+  cursor: none;
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .stage,
+  .stage * {
+    cursor: auto;
+  }
+}
+
+.brush-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 62;
+  width: 34px;
+  height: 34px;
+  margin: -3px 0 0 -3px;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.paint-drop {
+  position: absolute;
+  z-index: 61;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 58% 42% 55% 45%;
+  background: var(--drop, #ff6b35);
+  pointer-events: none;
+  opacity: 0;
+  animation: drop-fall var(--dur, 720ms) cubic-bezier(0.3, 0.7, 0.5, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes drop-fall {
+  0% {
+    opacity: 0.85;
+    transform: translate(0, 0) scale(0.55);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(calc(var(--dx, 0px) * 0.25), 3px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, 0px), 46px) scale(0.3);
+  }
+}
+
+/* new paint rolled over the previous coat */
+.wall-wipe {
+  animation: wall-wipe 520ms var(--ease-brush) forwards;
+}
+@keyframes wall-wipe {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+  to {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+}
+
+/* CSS-only entrance for above-the-fold type — no hydration delay, good LCP */
+.rise-word {
+  display: inline-block;
+  animation: rise-word 0.62s var(--ease-brush) both;
+  animation-delay: calc(var(--i, 0) * 55ms + 80ms);
+}
+/* above-the-fold fade — CSS only, so nothing waits on hydration */
+.rise {
+  animation: rise 0.7s var(--ease-brush) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rise-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em);
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 0 0);
   }
 }
 

@@ -4,13 +4,14 @@ import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { faqs } from "@/lib/site";
 import { Reveal, SectionHeading } from "@/components/ui/Reveal";
+import { PaintEdge } from "@/components/ui/PaintEdge";
 
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative scroll-mt-24 bg-card py-20 sm:py-28">
-      <div aria-hidden className="scrub-rule absolute inset-x-0 top-0 h-[3px] bg-tangerine" />
+    <section id="faq" className="relative scroll-mt-24 py-20 sm:py-28">
+      <PaintEdge tone="surface" />
       <div className="mx-auto max-w-4xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Good questions"

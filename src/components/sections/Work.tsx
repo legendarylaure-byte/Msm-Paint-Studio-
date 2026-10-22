@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MoveHorizontal } from "lucide-react";
 import { Reveal, SectionHeading } from "@/components/ui/Reveal";
 import { photo, dullStyle } from "@/lib/photo";
+import { PaintEdge } from "@/components/ui/PaintEdge";
 
 /** One photograph, two states: the "before" is the same frame dulled down. */
 function Room({ tone, label }: { tone: "before" | "after"; label: string }) {
@@ -43,8 +44,8 @@ export function Work() {
   }, []);
 
   return (
-    <section id="work" className="relative scroll-mt-24 bg-card py-20 sm:py-28">
-      <div aria-hidden className="scrub-rule absolute inset-x-0 top-0 h-[3px] bg-tangerine" />
+    <section id="work" className="relative scroll-mt-24 bg-surface-2 py-20 sm:py-28">
+      <PaintEdge tone="surface-2" />
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Our work"

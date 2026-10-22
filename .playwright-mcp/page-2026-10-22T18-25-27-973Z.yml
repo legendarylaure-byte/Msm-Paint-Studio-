@@ -1,0 +1,426 @@
+- generic [active] [ref=f16e1]:
+  - link "Skip to content" [ref=f16e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f16e3]:
+    - generic [ref=f16e4]:
+      - link "MSM Painting Studio home" [ref=f16e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f16e11]:
+          - generic [ref=f16e12]: MSM Painting
+          - generic [ref=f16e13]: Studio
+      - navigation "Main" [ref=f16e14]:
+        - link "Services" [ref=f16e15] [cursor=pointer]:
+          - /url: /#services
+        - link "How it works" [ref=f16e16] [cursor=pointer]:
+          - /url: /#process
+        - link "Our work" [ref=f16e17] [cursor=pointer]:
+          - /url: /#work
+        - link "FAQ" [ref=f16e18] [cursor=pointer]:
+          - /url: /#faq
+      - generic [ref=f16e19]:
+        - generic [ref=f16e20]:
+          - link "0400 000 000" [ref=f16e21] [cursor=pointer]:
+            - /url: tel:+61400000000
+          - link "Book a painter" [ref=f16e22] [cursor=pointer]:
+            - /url: /#book
+        - button "Switch to dark theme" [ref=f16e23]
+  - main [ref=f16e29]:
+    - generic [ref=f16e30]:
+      - generic [ref=f16e31]:
+        - generic [ref=f16e32]:
+          - img "living preview painted in Warm Sand" [ref=f16e34]
+          - generic [ref=f16e81]:
+            - button "Living" [pressed] [ref=f16e82]
+            - button "Bed" [ref=f16e83]
+            - button "Nursery" [ref=f16e84]
+        - generic [ref=f16e87]:
+          - generic [ref=f16e88]: Berwick VIC · Free colour advice
+          - heading "Painting that makes a house feel like home" [level=1] [ref=f16e93]:
+            - generic [ref=f16e94]: Painting
+            - generic [ref=f16e95]: that
+            - generic [ref=f16e96]: makes
+            - generic [ref=f16e97]: a
+            - generic [ref=f16e98]: house
+            - generic [ref=f16e99]: feel
+            - generic [ref=f16e100]: like
+            - generic [ref=f16e101]: home
+          - paragraph [ref=f16e102]:
+            - strong [ref=f16e103]: Hands-on craft
+            - text: ", prepped properly and painted beautifully — interiors, exteriors, fences and shops, cleaned up completely."
+          - generic [ref=f16e104]:
+            - link "Book a free quote" [ref=f16e105] [cursor=pointer]:
+              - /url: /#book
+            - link "0400 000 000" [ref=f16e109] [cursor=pointer]:
+              - /url: tel:+61400000000
+          - generic [ref=f16e110]:
+            - generic [ref=f16e111]:
+              - paragraph [ref=f16e112]: Paint these walls
+              - paragraph [ref=f16e117]: move the brush across the room
+            - group "Wall colour" [ref=f16e118]:
+              - button "Chalk" [ref=f16e119]
+              - button "Warm Sand" [pressed] [ref=f16e121]
+              - button "Sage" [ref=f16e125]
+              - button "Olive" [ref=f16e127]
+              - button "Terracotta" [ref=f16e129]
+              - button "Blush" [ref=f16e131]
+              - button "Denim" [ref=f16e133]
+              - button "Charcoal" [ref=f16e135]
+            - paragraph [ref=f16e137]: Warm Sand · screen colour is a guide — we'll bring the fan deck to the quote.
+      - list [ref=f16e139]:
+        - listitem [ref=f16e140]:
+          - generic [ref=f16e144]: Free no-obligation quotes
+        - listitem [ref=f16e145]:
+          - generic [ref=f16e149]: Fully insured
+        - listitem [ref=f16e150]:
+          - generic [ref=f16e157]: Free colour advice
+        - listitem [ref=f16e158]:
+          - generic [ref=f16e162]: Berwick-based, all of Casey
+    - generic [ref=f16e164]:
+      - generic [ref=f16e165]:
+        - paragraph [ref=f16e167]: What we paint
+        - heading "Every surface, inside and out" [level=2] [ref=f16e168]:
+          - generic [ref=f16e169]:
+            - generic [ref=f16e170]: Every
+            - generic [ref=f16e171]: surface,
+            - generic [ref=f16e172]: inside
+            - generic [ref=f16e173]: and
+            - generic [ref=f16e174]: out
+        - paragraph [ref=f16e176]: "From a single bedroom to a full warehouse, the prep is the same obsession: clean, protect, prime, then lay on colour that lasts."
+      - generic [ref=f16e177]:
+        - article [ref=f16e179]:
+          - heading "Interior Painting" [level=3] [ref=f16e184]
+          - paragraph [ref=f16e185]: Clean lines, smooth finishes and colours that lift every room — masked, prepped and protected so the only mess you see is the colour you chose.
+          - list [ref=f16e186]:
+            - listitem [ref=f16e187]: Walls, ceilings, trims & feature walls
+            - listitem [ref=f16e189]: Low-odour, low-VOC paints
+        - article [ref=f16e192]:
+          - heading "Exterior Painting" [level=3] [ref=f16e197]
+          - paragraph [ref=f16e198]: Australian sun and rain are tough on paint. We prep, prime and finish with quality exterior coatings built to hold their colour.
+          - list [ref=f16e199]:
+            - listitem [ref=f16e200]: Weatherboard, render, eaves & fascias
+            - listitem [ref=f16e202]: Pressure-wash prep
+        - article [ref=f16e205]:
+          - heading "Shops & Warehouses" [level=3] [ref=f16e211]
+          - paragraph [ref=f16e212]: Retail, offices, workshops and warehouses painted around your trading hours — nights and weekends available.
+          - list [ref=f16e213]:
+            - listitem [ref=f16e214]: After-hours scheduling
+            - listitem [ref=f16e216]: High-traffic coatings & line marking
+        - article [ref=f16e219]:
+          - heading "Fences & Gates" [level=3] [ref=f16e225]
+          - paragraph [ref=f16e226]: Timber, metal and colorbond fences brought back to life — the quickest way to make a property look cared for.
+          - list [ref=f16e227]:
+            - listitem [ref=f16e228]: Timber, colorbond & metal
+            - listitem [ref=f16e230]: Gates, screens & pergola staining
+        - article [ref=f16e233]:
+          - heading "Colour Advice" [level=3] [ref=f16e241]
+          - paragraph [ref=f16e242]: Bring us a couch, a tile or a photo — we'll help you build a palette that flows room to room, free with every quote.
+          - list [ref=f16e243]:
+            - listitem [ref=f16e244]: Room-to-room palettes
+            - listitem [ref=f16e246]: Sample pot testing
+        - article [ref=f16e249]:
+          - heading "Repairs & Prep" [level=3] [ref=f16e255]
+          - paragraph [ref=f16e256]: Cracks, holes, flaking and mould — sorted before a drop of paint goes on. Preparation is where a paint job earns its years.
+          - list [ref=f16e257]:
+            - listitem [ref=f16e258]: Crack, hole & mould treatment
+            - listitem [ref=f16e260]: Sanding, sealing & waterproofing
+    - generic [ref=f16e264]:
+      - generic [ref=f16e265]:
+        - paragraph [ref=f16e267]: Why MSM
+        - heading "Real craft, now with a studio behind it." [level=2] [ref=f16e269]
+        - paragraph [ref=f16e271]: Experienced hands on houses, rooms, buildings, fences and warehouses — focused on one job at a time, done properly, for people who care how their home feels.
+        - generic [ref=f16e273]:
+          - generic [ref=f16e274]:
+            - generic [ref=f16e275]: 1 day
+            - paragraph [ref=f16e277]: Quote turnaround
+          - generic [ref=f16e278]:
+            - generic [ref=f16e279]: 600+
+            - paragraph [ref=f16e281]: Rooms transformed
+          - generic [ref=f16e282]:
+            - generic [ref=f16e283]: 100%
+            - paragraph [ref=f16e285]: Free quotes
+          - generic [ref=f16e286]:
+            - generic [ref=f16e287]: 5★
+            - paragraph [ref=f16e289]: Care on every job
+      - generic [ref=f16e290]:
+        - generic [ref=f16e297]:
+          - heading "Prep is the product" [level=3] [ref=f16e298]
+          - paragraph [ref=f16e299]: Masking, filling, sanding, priming. The part you don't see is what decides how long the part you do see lasts.
+        - generic [ref=f16e305]:
+          - heading "Low-odour, low-VOC" [level=3] [ref=f16e306]
+          - paragraph [ref=f16e307]: Family- and pet-conscious paint options for interiors, so you can sleep in the room that night.
+        - generic [ref=f16e314]:
+          - heading "On time, no surprises" [level=3] [ref=f16e315]
+          - paragraph [ref=f16e316]: Clear start dates, clear timelines, itemised quotes. The number we say is the number you pay.
+    - generic [ref=f16e318]:
+      - generic [ref=f16e319]:
+        - paragraph [ref=f16e321]: How it works
+        - heading "Four easy steps to a fresh home" [level=2] [ref=f16e322]:
+          - generic [ref=f16e323]:
+            - generic [ref=f16e324]: Four
+            - generic [ref=f16e325]: easy
+            - generic [ref=f16e326]: steps
+            - generic [ref=f16e327]: to
+            - generic [ref=f16e328]: a
+            - generic [ref=f16e329]: fresh
+            - generic [ref=f16e330]: home
+        - paragraph [ref=f16e332]: No jargon, no pressure. Here's exactly what happens from the moment you get in touch.
+      - list [ref=f16e335]:
+        - listitem [ref=f16e336]:
+          - generic [ref=f16e337]: "01"
+          - generic [ref=f16e339]:
+            - heading "Say hello" [level=3] [ref=f16e340]
+            - paragraph [ref=f16e341]: Send a booking or a quick quote with a photo or two. Tell us the space, the vibe, the deadline.
+        - listitem [ref=f16e342]:
+          - generic [ref=f16e343]: "02"
+          - generic [ref=f16e345]:
+            - heading "Walk & quote" [level=3] [ref=f16e346]
+            - paragraph [ref=f16e347]: We look at the surface properly — light, condition, prep needed — then a clear, itemised free quote.
+        - listitem [ref=f16e348]:
+          - generic [ref=f16e349]: "03"
+          - generic [ref=f16e351]:
+            - heading "Prep like pros" [level=3] [ref=f16e352]
+            - paragraph [ref=f16e353]: Masking, filling, sanding, priming. Furniture protected, floors covered, pets and kids considered.
+        - listitem [ref=f16e354]:
+          - generic [ref=f16e355]: "04"
+          - generic [ref=f16e357]:
+            - heading "Paint & wow" [level=3] [ref=f16e358]
+            - paragraph [ref=f16e359]: Smooth, even coats with quality paint. We clean up completely and walk the job with you before we leave.
+    - generic [ref=f16e361]:
+      - generic [ref=f16e362]:
+        - paragraph [ref=f16e364]: Our work
+        - heading "Drag to see the transformation" [level=2] [ref=f16e365]:
+          - generic [ref=f16e366]:
+            - generic [ref=f16e367]: Drag
+            - generic [ref=f16e368]: to
+            - generic [ref=f16e369]: see
+            - generic [ref=f16e370]: the
+            - generic [ref=f16e371]: transformation
+        - paragraph [ref=f16e373]: Colour is the fastest way to change how a room feels. Pull the slider and watch a tired space come back to life.
+      - generic [ref=f16e374]:
+        - slider "Before and after comparison slider" [ref=f16e375]:
+          - generic [ref=f16e378]: Before
+          - generic [ref=f16e379]: After
+        - paragraph [ref=f16e387]: Illustrative preview — swap in real before/after job photos from the admin gallery.
+    - generic [ref=f16e390]:
+      - generic [ref=f16e392]:
+        - generic [ref=f16e395]:
+          - paragraph [ref=f16e401]: Photo of your painter on the job
+          - paragraph [ref=f16e402]: Replace with a real portrait for launch
+        - generic [ref=f16e403]:
+          - paragraph [ref=f16e404]: "1"
+          - paragraph [ref=f16e405]: Painter, start to finish
+      - generic [ref=f16e406]:
+        - paragraph [ref=f16e408]: Meet your painter
+        - heading "You get the painter, not a painting machine." [level=2] [ref=f16e410]
+        - generic [ref=f16e412]:
+          - paragraph [ref=f16e413]: "Every job MSM Painting Studio takes on teaches the same lesson: the difference between good and great is almost always in the preparation."
+          - paragraph [ref=f16e414]: So it's one painter, start to finish — the person quoting is the person painting, and the same hands that masked the skirting are the ones cutting in the last coat.
+        - blockquote [ref=f16e416]: “I'd rather do three jobs properly than six rushed.”
+    - generic [ref=f16e418]:
+      - generic [ref=f16e419]:
+        - paragraph [ref=f16e421]: Happy clients
+        - heading "The kind of words that make our day" [level=2] [ref=f16e422]:
+          - generic [ref=f16e423]:
+            - generic [ref=f16e424]: The
+            - generic [ref=f16e425]: kind
+            - generic [ref=f16e426]: of
+            - generic [ref=f16e427]: words
+            - generic [ref=f16e428]: that
+            - generic [ref=f16e429]: make
+            - generic [ref=f16e430]: our
+            - generic [ref=f16e431]: day
+      - generic [ref=f16e432]:
+        - figure "S Sarah T. Berwick" [ref=f16e434]:
+          - generic "5 out of 5 stars" [ref=f16e438]
+          - blockquote [ref=f16e449]: “MSM turned our tired living room into something we actually want to show people. Clean, on time, and the colour advice was spot on.”
+          - generic [ref=f16e450]:
+            - generic [ref=f16e451]: S
+            - generic [ref=f16e452]:
+              - generic [ref=f16e453]: Sarah T.
+              - generic [ref=f16e454]: Berwick
+        - figure "D Daniel & Priya Narre Warren" [ref=f16e456]:
+          - generic "5 out of 5 stars" [ref=f16e460]
+          - blockquote [ref=f16e471]: “Full interior done while we were at work. Came home to sharp lines, no mess and a house that smells fresh. Couldn't recommend more.”
+          - generic [ref=f16e472]:
+            - generic [ref=f16e473]: D
+            - generic [ref=f16e474]:
+              - generic [ref=f16e475]: Daniel & Priya
+              - generic [ref=f16e476]: Narre Warren
+        - figure "G Grant M. Cranbourne" [ref=f16e478]:
+          - generic "5 out of 5 stars" [ref=f16e482]
+          - blockquote [ref=f16e493]: “Quoted the same day, started the next week, fence and exterior look brand new. Honest pricing and genuine care.”
+          - generic [ref=f16e494]:
+            - generic [ref=f16e495]: G
+            - generic [ref=f16e496]:
+              - generic [ref=f16e497]: Grant M.
+              - generic [ref=f16e498]: Cranbourne
+    - generic [ref=f16e500]:
+      - generic [ref=f16e501]:
+        - paragraph [ref=f16e503]: Good questions
+        - heading "Everything people ask us" [level=2] [ref=f16e504]:
+          - generic [ref=f16e505]:
+            - generic [ref=f16e506]: Everything
+            - generic [ref=f16e507]: people
+            - generic [ref=f16e508]: ask
+            - generic [ref=f16e509]: us
+        - paragraph [ref=f16e511]: Straight answers on price, timing and what to expect. Anything else — just open the chat.
+      - generic [ref=f16e512]:
+        - generic [ref=f16e514]:
+          - heading [level=3] [ref=f16e515]:
+            - button "How much does painting cost?" [expanded] [ref=f16e516]
+          - paragraph [ref=f16e522]: It depends on size, surface condition and paint choice — that's why every quote is free and itemised. As a guide, a standard bedroom usually starts in the low hundreds, while full interiors and exteriors are quoted after a quick look. No hidden extras, ever.
+        - generic [ref=f16e524]:
+          - heading [level=3] [ref=f16e525]:
+            - button "Do you give free quotes?" [ref=f16e526]
+          - paragraph [ref=f16e530]: Yes — every quote is free and no-obligation. Book online, send photos through the chat, or just call. Most quotes come back within one business day.
+        - generic [ref=f16e532]:
+          - heading [level=3] [ref=f16e533]:
+            - button "What areas do you serve?" [ref=f16e534]
+          - paragraph [ref=f16e538]: Berwick is home base, and we cover all of Casey–Cardinia — Narre Warren, Cranbourne, Pakenham, Beaconsfield, Officer — plus greater Melbourne. Not sure if you're in range? Ask us.
+        - generic [ref=f16e540]:
+          - heading [level=3] [ref=f16e541]:
+            - button "How long does a job take?" [ref=f16e542]
+          - paragraph [ref=f16e546]: A single room is often done in a day. Full interiors usually run 2–5 days depending on size and prep. Exteriors depend on weather. We'll give you a clear timeline before we start.
+        - generic [ref=f16e548]:
+          - heading [level=3] [ref=f16e549]:
+            - button "Are you insured?" [ref=f16e550]
+          - paragraph [ref=f16e554]: Yes — MSM Painting Studio carries full public liability cover. Certificates can be provided on request before any work begins.
+    - generic [ref=f16e556]:
+      - generic [ref=f16e557]:
+        - paragraph [ref=f16e559]: Book a painter
+        - heading "Grab a time that works for you" [level=2] [ref=f16e560]:
+          - generic [ref=f16e561]:
+            - generic [ref=f16e562]: Grab
+            - generic [ref=f16e563]: a
+            - generic [ref=f16e564]: time
+            - generic [ref=f16e565]: that
+            - generic [ref=f16e566]: works
+            - generic [ref=f16e567]: for
+            - generic [ref=f16e568]: you
+        - paragraph [ref=f16e570]: Three quick steps. You'll get an email confirmation the moment it's in, and we'll lock the slot within one business day.
+      - generic [ref=f16e571]:
+        - generic [ref=f16e572]: Takes ~60 seconds
+        - generic [ref=f16e576]: No payment required
+        - generic [ref=f16e580]: Free colour advice
+      - generic [ref=f16e588]:
+        - generic [ref=f16e589]:
+          - generic [ref=f16e591]:
+            - generic [ref=f16e592]: "1"
+            - generic [ref=f16e593]: Job
+          - generic [ref=f16e596]:
+            - generic [ref=f16e597]: "2"
+            - generic [ref=f16e598]: When
+          - generic [ref=f16e601]:
+            - generic [ref=f16e602]: "3"
+            - generic [ref=f16e603]: About you
+        - generic [ref=f16e604]:
+          - generic [ref=f16e606]:
+            - group "What needs painting?" [ref=f16e607]:
+              - generic [aria-hidden] [ref=f16e608]: What needs painting?
+              - generic [ref=f16e609]:
+                - button "Interior Painting" [ref=f16e610]
+                - button "Exterior Painting" [ref=f16e611]
+                - button "Shops & Warehouses" [ref=f16e612]
+                - button "Fences & Gates" [ref=f16e613]
+                - button "Colour Advice" [ref=f16e614]
+                - button "Repairs & Prep" [ref=f16e615]
+            - group "Property type" [ref=f16e616]:
+              - generic [aria-hidden] [ref=f16e617]: Property type
+              - generic [ref=f16e618]:
+                - button "House" [ref=f16e619]
+                - button "Unit / Apartment" [ref=f16e623]
+                - button "Shop / Office" [ref=f16e628]
+                - button "Fence / Exterior" [ref=f16e633]
+                - button "Other" [ref=f16e638]
+            - generic [ref=f16e642]:
+              - generic [ref=f16e643]: Tell us about the space (optional)
+              - textbox "Tell us about the space (optional)" [ref=f16e644]:
+                - /placeholder: e.g. 3 bedrooms, ceilings included, some cracks in the hallway…
+          - button "Continue" [disabled] [ref=f16e646]
+    - generic [ref=f16e652]:
+      - paragraph [ref=f16e654]: Just curious?
+      - heading "Get a free quote in one message." [level=2] [ref=f16e656]
+      - paragraph [ref=f16e658]: Not ready to book a date? Send the basics and we'll come back with a clear, itemised number — usually the same business day.
+      - generic [ref=f16e660]:
+        - link "Start a free quote" [ref=f16e661] [cursor=pointer]:
+          - /url: /#book
+        - link "0400 000 000" [ref=f16e665] [cursor=pointer]:
+          - /url: tel:+61400000000
+      - list [ref=f16e667]:
+        - listitem [ref=f16e668]:
+          - link "mesaykar@gmail.com" [ref=f16e672] [cursor=pointer]:
+            - /url: mailto:mesaykar@gmail.com
+        - listitem [ref=f16e673]:
+          - generic [ref=f16e677]: 9 Hedgeley Drive, Berwick VIC 3806
+        - listitem [ref=f16e678]:
+          - generic [ref=f16e681]: Mon–Sat, replies within one business day
+  - contentinfo [ref=f16e682]:
+    - generic [ref=f16e685]:
+      - generic [ref=f16e686]:
+        - generic [ref=f16e687]: MSM Painting Studio
+        - paragraph [ref=f16e694]: Hands-on painting craft, now its own studio. Houses, rooms, walls, fences, shops and warehouses across Berwick and greater Melbourne.
+        - generic [ref=f16e695]:
+          - link "Instagram" [ref=f16e696] [cursor=pointer]:
+            - /url: https://instagram.com/msmpaintingstudio
+          - link "Facebook" [ref=f16e701] [cursor=pointer]:
+            - /url: https://facebook.com/msmpaintingstudio
+      - generic [ref=f16e704]:
+        - heading "Services" [level=3] [ref=f16e705]
+        - list [ref=f16e706]:
+          - listitem [ref=f16e707]:
+            - link "Interior Painting" [ref=f16e708] [cursor=pointer]:
+              - /url: /#services
+          - listitem [ref=f16e709]:
+            - link "Exterior Painting" [ref=f16e710] [cursor=pointer]:
+              - /url: /#services
+          - listitem [ref=f16e711]:
+            - link "Shops & Warehouses" [ref=f16e712] [cursor=pointer]:
+              - /url: /#services
+          - listitem [ref=f16e713]:
+            - link "Fences & Gates" [ref=f16e714] [cursor=pointer]:
+              - /url: /#services
+          - listitem [ref=f16e715]:
+            - link "Colour Advice" [ref=f16e716] [cursor=pointer]:
+              - /url: /#services
+          - listitem [ref=f16e717]:
+            - link "Repairs & Prep" [ref=f16e718] [cursor=pointer]:
+              - /url: /#services
+      - generic [ref=f16e719]:
+        - heading "Help" [level=3] [ref=f16e720]
+        - list [ref=f16e721]:
+          - listitem [ref=f16e722]:
+            - link "FAQ & pricing" [ref=f16e723] [cursor=pointer]:
+              - /url: /#faq
+          - listitem [ref=f16e724]:
+            - link "Privacy policy" [ref=f16e725] [cursor=pointer]:
+              - /url: /privacy
+          - listitem [ref=f16e726]:
+            - link "Terms & conditions" [ref=f16e727] [cursor=pointer]:
+              - /url: /terms
+          - listitem [ref=f16e728]:
+            - link "Accessibility" [ref=f16e729] [cursor=pointer]:
+              - /url: /accessibility
+          - listitem [ref=f16e730]:
+            - link "Admin login" [ref=f16e731] [cursor=pointer]:
+              - /url: /admin
+      - generic [ref=f16e732]:
+        - heading "Get in touch" [level=3] [ref=f16e733]
+        - list [ref=f16e734]:
+          - listitem [ref=f16e735]:
+            - generic [ref=f16e739]: 9 Hedgeley DriveBerwick VIC 3806
+          - listitem [ref=f16e740]:
+            - link "0400 000 000" [ref=f16e743] [cursor=pointer]:
+              - /url: tel:+61400000000
+          - listitem [ref=f16e744]:
+            - link "mesaykar@gmail.com" [ref=f16e748] [cursor=pointer]:
+              - /url: mailto:mesaykar@gmail.com
+        - link "Book a free quote" [ref=f16e749] [cursor=pointer]:
+          - /url: /#book
+    - generic [ref=f16e751]:
+      - paragraph [ref=f16e752]: © 2026 MSM Painting Studio. ABN 00 000 000 000. All rights reserved.
+      - paragraph [ref=f16e753]:
+        - text: Proudly painting Berwick, Casey & Cardinia ·
+        - link "Admin" [ref=f16e754] [cursor=pointer]:
+          - /url: /admin
+  - button "Open Next.js Dev Tools" [ref=f16e760] [cursor=pointer]
+  - alert [ref=f16e764]

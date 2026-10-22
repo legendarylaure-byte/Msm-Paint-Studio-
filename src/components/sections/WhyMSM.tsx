@@ -6,6 +6,7 @@ import { BadgeCheck, HeartHandshake, Timer } from "lucide-react";
 import { site } from "@/lib/site";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 import { Reveal } from "@/components/ui/Reveal";
+import { PaintEdge } from "@/components/ui/PaintEdge";
 
 const values = [
   {
@@ -57,33 +58,12 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   );
 }
 
-const seamPath =
-  "M0 64 L0 36 C90 22 180 46 270 36 S450 20 540 32 S720 48 810 36 S990 20 1080 32 S1260 46 1350 34 L1440 36 L1440 64 Z";
-
 export function WhyMSM() {
   return (
     <section id="why" className="relative scroll-mt-24 bg-night py-20 text-onnight sm:py-28">
-      {/* paint edge — the dark section rises into the cream above and below */}
-      <div
-        aria-hidden
-        className="paint-seam pointer-events-none absolute inset-x-0 bottom-full z-20 h-10 sm:h-16"
-      >
-        <svg viewBox="0 0 1440 64" preserveAspectRatio="none" className="h-full w-full fill-night">
-          <path d={seamPath} />
-        </svg>
-      </div>
-      <div
-        aria-hidden
-        className="paint-seam paint-seam-down pointer-events-none absolute inset-x-0 top-full z-20 h-10 sm:h-16"
-      >
-        <svg
-          viewBox="0 0 1440 64"
-          preserveAspectRatio="none"
-          className="h-full w-full rotate-180 fill-night"
-        >
-          <path d={seamPath} />
-        </svg>
-      </div>
+      {/* paint edge — the dark band rises into the cream above and below */}
+      <PaintEdge tone="night" />
+      <PaintEdge tone="night" side="bottom" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-16">

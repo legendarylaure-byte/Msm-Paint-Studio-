@@ -6,8 +6,7 @@ import { Reveal } from "@/components/ui/Reveal";
 /** Final contact push — the shorter alternative to the full booking wizard. */
 export function QuoteCTA() {
   return (
-    <section id="quote" className="relative scroll-mt-24 bg-card py-20 sm:py-24">
-      <div aria-hidden className="scrub-rule absolute inset-x-0 top-0 h-[3px] bg-tangerine" />
+    <section id="quote" className="relative scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="rounded-[36px] border-[3px] border-edge bg-night px-8 py-12 text-center text-onnight sm:px-14 sm:py-16">
           <Reveal>
