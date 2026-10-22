@@ -114,8 +114,9 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
             <stop offset="1" stopColor="#fff6e2" stopOpacity="0" />
           </linearGradient>
 
-          <radialGradient id="glassGlow">
-            <stop offset="0" stopColor="#fff6e2" stopOpacity="0.5" />
+          {/* light bloom centred on the window, not the middle of the wall */}
+          <radialGradient id="glassGlow" cx="0.82" cy="0.42" r="0.62">
+            <stop offset="0" stopColor="#fff6e2" stopOpacity="0.45" />
             <stop offset="1" stopColor="#fff6e2" stopOpacity="0" />
           </radialGradient>
 
@@ -155,7 +156,7 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
 
         <path d={LEFT} fill="#000" opacity="0.11" />
         <path d={RIGHT} fill="#000" opacity="0.05" />
-        <path d={BACK} fill="url(#glassGlow)" opacity="0.35" />
+        <path d={BACK} fill="url(#glassGlow)" />
 
         <path d={CEILING} fill="url(#ceiling)" />
         <path d={FLOOR} fill="url(#floor)" />
@@ -217,7 +218,7 @@ function Contact({ cx, cy, rx }: { cx: number; cy: number; rx: number }) {
 function Living() {
   return (
     <g>
-      <ellipse cx="470" cy="716" rx="250" ry="54" fill="var(--room-rug)" opacity="0.7" />
+      <ellipse cx="470" cy="700" rx="250" ry="54" fill="var(--room-rug)" opacity="0.7" />
       <Contact cx={515} cy={642} rx={245} />
       <rect x="300" y="452" width="420" height="112" rx="14" fill="var(--room-furniture-2)" />
       <rect x="286" y="556" width="448" height="66" rx="16" fill="var(--room-furniture)" />
@@ -226,15 +227,15 @@ function Living() {
       <rect x="708" y="512" width="40" height="120" rx="14" fill="var(--room-furniture-2)" />
       <line x1="510" y1="466" x2="510" y2="552" stroke="#000" strokeOpacity="0.08" strokeWidth="2" />
       {/* coffee table */}
-      <Contact cx={510} cy={732} rx={130} />
-      <rect x="410" y="678" width="200" height="14" rx="6" fill="var(--room-furniture-2)" />
-      <rect x="424" y="692" width="9" height="34" rx="3" fill="var(--room-furniture-2)" />
-      <rect x="587" y="692" width="9" height="34" rx="3" fill="var(--room-furniture-2)" />
+      <Contact cx={510} cy={690} rx={130} />
+      <rect x="410" y="650" width="200" height="14" rx="6" fill="var(--room-furniture-2)" />
+      <rect x="424" y="664" width="9" height="24" rx="3" fill="var(--room-furniture-2)" />
+      <rect x="587" y="664" width="9" height="24" rx="3" fill="var(--room-furniture-2)" />
       {/* plant */}
-      <Contact cx={946} cy={700} rx={54} />
-      <path d="M946 700c-6-40 8-62 26-76-2 30-8 54-18 76z" fill="var(--room-plant)" />
-      <path d="M946 700c-2-34-18-52-34-60 4 28 14 44 26 60z" fill="var(--room-plant)" opacity="0.8" />
-      <path d="M930 700h34l-5 44h-24z" fill="var(--room-furniture-2)" />
+      <Contact cx={946} cy={662} rx={50} />
+      <path d="M946 660c-6-38 8-60 26-74-2 30-8 54-18 74z" fill="var(--room-plant)" />
+      <path d="M946 660c-2-32-18-50-34-58 4 28 14 42 26 58z" fill="var(--room-plant)" opacity="0.8" />
+      <path d="M930 660h34l-5 32h-24z" fill="var(--room-furniture-2)" />
     </g>
   );
 }

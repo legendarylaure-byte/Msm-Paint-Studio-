@@ -78,7 +78,9 @@ export function Hero() {
             className="pointer-events-none absolute inset-0 hidden lg:block"
             style={{
               background:
-                "linear-gradient(90deg, var(--surface) 0%, var(--surface) 38%, rgb(var(--scrim) / 0.72) 50%, rgb(var(--scrim) / 0) 66%)",
+                "linear-gradient(90deg, rgb(var(--scrim)) 0%, rgb(var(--scrim)) 24%, "
+                + "rgb(var(--scrim) / 0.86) 36%, rgb(var(--scrim) / 0.5) 48%, "
+                + "rgb(var(--scrim) / 0.16) 58%, rgb(var(--scrim) / 0) 68%)",
             }}
           />
 
@@ -160,7 +162,7 @@ export function Hero() {
               </div>
 
               {/* ——— palette ——— */}
-              <div className="rise mt-7 sm:mt-9" style={{ "--d": "580ms" } as CSSProperties}>
+              <div className="rise mt-7 max-w-md sm:mt-9" style={{ "--d": "580ms" } as CSSProperties}>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-ink-soft">
                     <Brush className="h-3.5 w-3.5" />
