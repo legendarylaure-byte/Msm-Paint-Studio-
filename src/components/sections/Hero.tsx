@@ -79,8 +79,8 @@ export function Hero() {
             style={{
               background:
                 "linear-gradient(90deg, rgb(var(--scrim)) 0%, rgb(var(--scrim)) 24%, "
-                + "rgb(var(--scrim) / 0.86) 36%, rgb(var(--scrim) / 0.5) 48%, "
-                + "rgb(var(--scrim) / 0.16) 58%, rgb(var(--scrim) / 0) 68%)",
+                + "rgb(var(--scrim) / 0.88) 36%, rgb(var(--scrim) / 0.57) 48%, "
+                + "rgb(var(--scrim) / 0.22) 58%, rgb(var(--scrim) / 0) 68%)",
             }}
           />
 
@@ -115,7 +115,7 @@ export function Hero() {
         >
           <div className="mx-auto w-full max-w-7xl px-5 pt-8 pb-10 sm:px-8 lg:py-0">
             {/* the text column takes the pointer back — the rest of the hero stays paint-through */}
-            <div className="pointer-events-auto lg:max-w-xl">
+            <div className="pointer-events-auto lg:max-w-md xl:max-w-xl">
               <div
                 className="rise inline-flex items-center gap-2 rounded-full border border-tangerine/25 bg-tangerine/10 px-4 py-2 text-accent"
                 style={{ "--d": "40ms" } as CSSProperties}
