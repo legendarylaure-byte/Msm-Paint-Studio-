@@ -44,7 +44,7 @@ export function Work() {
   }, []);
 
   return (
-    <section id="work" className="relative scroll-mt-24 bg-surface-2 py-20 sm:py-28">
+    <section id="work" className="relative scroll-mt-24 py-20 sm:py-28">
       <PaintEdge tone="surface-2" />
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading

@@ -4,7 +4,7 @@ import { Reveal, SectionHeading } from "@/components/ui/Reveal";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="scroll-mt-24 bg-surface-2 py-20 sm:py-28">
+    <section id="testimonials" className="scroll-mt-24 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Happy clients"

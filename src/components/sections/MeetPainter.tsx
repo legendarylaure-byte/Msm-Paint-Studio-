@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/Reveal";
 /** The trust anchor: the person behind the brand. */
 export function MeetPainter() {
   return (
-    <section className="bg-surface-2 py-20 sm:py-28">
+    <section className="py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           {/* portrait placeholder — swap for a real photo of the painter on the job */}

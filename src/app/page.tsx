@@ -16,9 +16,12 @@ export default function Home() {
       <Services />
       <WhyMSM />
       <Process />
-      <Work />
-      <MeetPainter />
-      <Testimonials />
+      {/* one painted surface for the whole sand band — no seams between sections */}
+      <div className="bg-surface-2">
+        <Work />
+        <MeetPainter />
+        <Testimonials />
+      </div>
       <FAQ />
       <BookingSection />
       <QuoteCTA />

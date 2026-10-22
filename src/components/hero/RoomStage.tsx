@@ -147,6 +147,12 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
           </g>
         )}
 
+        <g fill="var(--room-wall-dim)">
+          <path d={BACK} />
+          <path d={LEFT} />
+          <path d={RIGHT} />
+        </g>
+
         <path d={LEFT} fill="#000" opacity="0.11" />
         <path d={RIGHT} fill="#000" opacity="0.05" />
         <path d={BACK} fill="url(#glassGlow)" opacity="0.35" />

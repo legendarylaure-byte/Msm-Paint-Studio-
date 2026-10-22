@@ -432,6 +432,7 @@ p {
   --room-sky-a: #cfe0e8;
   --room-sky-b: #eef2e9;
   --room-shadow: 0.32;
+  --room-wall-dim: rgba(0, 0, 0, 0);
 }
 
 [data-theme="dark"] .stage {
@@ -448,6 +449,8 @@ p {
   --room-sky-a: #2b3a52;
   --room-sky-b: #4a4560;
   --room-shadow: 0.6;
+  /* evening: the painted wall sits in lamp light, not sunlight */
+  --room-wall-dim: rgba(0, 0, 0, 0.32);
 }
 
 /* the native pointer only disappears on fine-pointer devices that opt in */

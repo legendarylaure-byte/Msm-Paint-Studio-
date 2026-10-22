@@ -107,12 +107,13 @@ export function Hero() {
 
         {/* ——— copy sheet ——— */}
         <div
-          className={`relative z-10 -mt-7 rounded-t-[32px] bg-surface lg:mt-0 lg:flex lg:min-h-[min(78svh,780px)] lg:items-center lg:rounded-none lg:bg-transparent ${
+          className={`pointer-events-none relative z-10 -mt-7 rounded-t-[32px] bg-surface lg:mt-0 lg:flex lg:min-h-[min(78svh,780px)] lg:items-center lg:rounded-none lg:bg-transparent ${
             reduce ? "" : "transition-colors duration-500"
           }`}
         >
           <div className="mx-auto w-full max-w-7xl px-5 pt-8 pb-10 sm:px-8 lg:py-0">
-            <div className="lg:max-w-xl">
+            {/* the text column takes the pointer back — the rest of the hero stays paint-through */}
+            <div className="pointer-events-auto lg:max-w-xl">
               <div
                 className="rise inline-flex items-center gap-2 rounded-full border border-tangerine/25 bg-tangerine/10 px-4 py-2 text-accent"
                 style={{ "--d": "40ms" } as CSSProperties}
@@ -161,7 +162,7 @@ export function Hero() {
               {/* ——— palette ——— */}
               <div className="rise mt-7 sm:mt-9" style={{ "--d": "580ms" } as CSSProperties}>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-ink-mute">
+                  <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-ink-soft">
                     <Brush className="h-3.5 w-3.5" />
                     Paint these walls
                   </p>
@@ -205,7 +206,7 @@ export function Hero() {
                   })}
                 </div>
 
-                <p aria-live="polite" className="mt-2.5 text-xs text-ink-mute">
+                <p aria-live="polite" className="mt-2.5 text-xs text-ink-soft">
                   {activeName} · screen colour is a guide — we&apos;ll bring the fan deck to
                   the quote.
                 </p>
