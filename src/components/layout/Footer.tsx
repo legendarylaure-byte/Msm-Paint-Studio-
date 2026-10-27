@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Paintbrush, Mail, Phone, MapPin } from "lucide-react";
 import { Year } from "@/components/ui/Year";
 import { site, services } from "@/lib/site";
+import { DripEdge } from "@/components/layout/DripEdge";
 
 /* Brand glyphs drawn inline — lucide dropped brand icons. */
 const Instagram = (p: { className?: string }) => (
@@ -21,18 +22,7 @@ const Facebook = (p: { className?: string }) => (
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-night text-onnight">
-      {/* paint drip divider */}
-      <svg
-        viewBox="0 0 1440 60"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        className="absolute -top-px left-0 h-10 w-full text-ink"
-      >
-        <path
-          fill="currentColor"
-          d="M0 0h1440v18c-120 22-240 6-360 12s-240 26-360 22-240-24-360-26S120 40 0 30V0z"
-        />
-      </svg>
+      <DripEdge />
 
       <div className="mx-auto grid max-w-7xl gap-12 px-5 pt-16 pb-10 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-5">
@@ -154,16 +144,18 @@ export function Footer() {
       </div>
 
       <div className="border-t border-onnight/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-xs text-onnight/50 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <p>
-            © <Year /> {site.name}. ABN {site.abn}. All rights
-            reserved.
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-3 px-5 py-6 text-xs text-onnight/50 sm:grid-cols-3 sm:px-8">
+          <p className="sm:text-left">
+            © <Year /> {site.name}. ABN {site.abn}. All rights reserved.
           </p>
-          <p>
+          <p className="text-center">
             Proudly painting Berwick, Casey &amp; Cardinia ·{" "}
             <Link href="/admin" className="underline transition-colors hover:text-accent-dark">
               Admin
             </Link>
+          </p>
+          <p className="sm:text-right">
+            Crafted in Kathmandu · Deployed Globally @vyomai cloud
           </p>
         </div>
       </div>

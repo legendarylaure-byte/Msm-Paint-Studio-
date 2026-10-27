@@ -1,21 +1,26 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 import { site } from "@/lib/site";
-import { Reveal } from "@/components/ui/Reveal";
+import { Reveal, PaintUnderline } from "@/components/ui/Reveal";
 
 /** Final contact push — the shorter alternative to the full booking wizard. */
 export function QuoteCTA() {
   return (
     <section id="quote" className="relative scroll-mt-24 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="rounded-[36px] border-[3px] border-edge bg-night px-8 py-12 text-center text-onnight sm:px-14 sm:py-16">
+        <div className="rounded-[28px] border-[3px] border-edge bg-night px-8 py-12 text-center text-onnight sm:px-14 sm:py-16">
           <Reveal>
             <p className="eyebrow text-accent-dark">Just curious?</p>
           </Reveal>
           <Reveal delay={0.06}>
             <h2 className="mx-auto mt-3 max-w-2xl text-h2 font-extrabold text-balance">
               Get a free quote in{" "}
-              <span className="text-accent-dark">one message</span>.
+              <span className="text-accent-dark">one </span>
+              <span className="relative inline-block">
+                <span className="text-accent-dark">message</span>
+                <PaintUnderline tone="light" />
+              </span>
+              .
             </h2>
           </Reveal>
           <Reveal delay={0.12}>

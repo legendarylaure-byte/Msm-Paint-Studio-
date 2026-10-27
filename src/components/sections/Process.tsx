@@ -5,6 +5,7 @@ import { motion, useScroll, useSpring } from "motion/react";
 import { processSteps } from "@/lib/site";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 import { Reveal, SectionHeading } from "@/components/ui/Reveal";
+import { AreasWeServe } from "@/components/sections/AreasWeServe";
 
 export function Process() {
   const ref = useRef<HTMLOListElement>(null);
@@ -35,7 +36,7 @@ export function Process() {
             aria-hidden
             data-motion
             style={{ scaleY: reduce ? 1 : fill }}
-            className="absolute left-7 top-0 h-full w-[6px] origin-top rounded-full bg-tangerine sm:left-1/2 sm:-translate-x-1/2"
+            className="absolute left-7 top-0 h-full w-[6px] origin-top rounded-full bg-brush-ink sm:left-1/2 sm:-translate-x-1/2"
           />
 
           <ol ref={ref} className="space-y-10 sm:space-y-14">
@@ -45,7 +46,7 @@ export function Process() {
                 <li key={s.step} className="relative pl-20 sm:grid sm:grid-cols-2 sm:gap-16 sm:pl-0">
                   {/* node */}
                   <span
-                    className="absolute left-0 top-1 z-10 grid h-14 w-14 place-items-center rounded-2xl border-[5px] border-surface bg-tangerine font-display text-lg font-extrabold text-onbrand shadow-lg sm:left-1/2 sm:-translate-x-1/2"
+                    className="absolute left-0 top-1 z-10 grid h-14 w-14 place-items-center rounded-2xl border-[5px] border-surface bg-ink font-display text-lg font-extrabold text-surface shadow-lg sm:left-1/2 sm:-translate-x-1/2"
                   >
                     {s.step}
                   </span>
@@ -55,12 +56,12 @@ export function Process() {
                     className={`${right ? "sm:col-start-2 sm:pl-4" : "sm:col-start-1 sm:text-right sm:pr-4"}`}
                   >
                     <div
-                      className={`card-lift rounded-3xl border border-line bg-card p-7 ${
+                      className={`card-lift rounded-[20px] border border-line bg-card p-7 ${
                         right ? "" : "sm:ml-auto"
                       } max-w-md`}
                     >
                       <h3 className="text-h3 font-extrabold">{s.title}</h3>
-                      <p className="mt-2 text-[0.97rem] leading-relaxed text-ink-soft">
+                      <p className="mt-2 text-base leading-relaxed text-ink-soft">
                         {s.text}
                       </p>
                     </div>
@@ -71,6 +72,8 @@ export function Process() {
           </ol>
         </div>
       </div>
-    </section>
+      <div className="mt-20">
+        <AreasWeServe />
+      </div>    </section>
   );
 }

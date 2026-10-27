@@ -6,7 +6,7 @@
 
 export const site = {
   name: "MSM Painting Studio",
-  tagline: "Colour that makes a house feel like home",
+  tagline: "One painter's eye. A full team's finish.",
   url: "https://msmpaintingstudio.vercel.app",
   email: "mesaykar@gmail.com",
   phone: "0400 000 000", // TODO: client's real mobile
@@ -162,6 +162,7 @@ export const testimonials = [
   {
     name: "Sarah T.",
     area: "Berwick",
+    tag: "Interior",
     quote:
       "MSM turned our tired living room into something we actually want to show people. Clean, on time, and the colour advice was spot on.",
     stars: 5,
@@ -169,6 +170,7 @@ export const testimonials = [
   {
     name: "Daniel & Priya",
     area: "Narre Warren",
+    tag: "Interior",
     quote:
       "Full interior done while we were at work. Came home to sharp lines, no mess and a house that smells fresh. Couldn't recommend more.",
     stars: 5,
@@ -176,6 +178,7 @@ export const testimonials = [
   {
     name: "Grant M.",
     area: "Cranbourne",
+    tag: "Exterior & Fence",
     quote:
       "Quoted the same day, started the next week, fence and exterior look brand new. Honest pricing and genuine care.",
     stars: 5,

@@ -5,7 +5,7 @@ import { SectionHeading } from "@/components/ui/Reveal";
 export function BookingSection() {
   return (
     <section id="book" className="relative scroll-mt-24 overflow-hidden py-20 sm:py-28">
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-surface via-tangerine/[0.07] to-surface" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-surface via-brush-ink/[0.06] to-surface" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading

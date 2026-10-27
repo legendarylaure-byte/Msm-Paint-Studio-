@@ -1,14 +1,33 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  Manrope,
+  JetBrains_Mono,
+} from "next/font/google";
 import { site } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import { SectionIndicator } from "@/components/ui/SectionIndicator";
+import { SplashCursor } from "@/components/ui/SplashCursor";
+import { BrushCursor } from "@/components/ui/BrushCursor";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+const display = Bricolage_Grotesque({
+  variable: "--font-display-family",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const body = Manrope({
+  variable: "--font-body-family",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono-family",
   subsets: ["latin"],
   display: "swap",
 });
@@ -86,7 +105,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-AU"
       suppressHydrationWarning
-      className={`${jakarta.variable} h-full`}
+      className={`${display.variable} ${body.variable} ${mono.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">
         <script
@@ -102,6 +121,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <ScrollProgress />
+        <SplashCursor />
+        <BrushCursor />
+        <SectionIndicator />
         <Header />
         <main id="main" className="flex-1">
           {children}

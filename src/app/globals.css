@@ -1,46 +1,67 @@
 @import "tailwindcss";
 
+/* theme is toggled by data-theme on <html>, not by OS preference */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* ————————————————————————————————————————————————
    THEME TOKENS
    Light is default. Toggle writes data-theme="dark" on <html>.
    Surface/text/border flip; brand colours stay fixed.
 ———————————————————————————————————————————————— */
 :root {
-  --surface: #fffdf7;
-  /* the second band: a real tonal step, not #ffffff against #fffdf7 */
-  --surface-2: #f4efe3;
+  --surface: #f8f9fc;
+  /* cool slate band for visual separation */
+  --surface-2: #f0f3fa;
   --card: #ffffff;
-  --ink: #16162a;
-  --ink-soft: #4a4a63;
-  --ink-mute: #6a6a84;
-  --line: #e7e1d3;
-  /* warmed so the near-black stops fighting the cream */
-  --night: #17161f;
-  --onnight: #fffdf7;
-  --edge: #16162a;
-  --blob: 0.14;
+  --ink: #0f1026;
+  --ink-soft: #3a3f5c;
+  --ink-mute: #6b728e;
+  --line: #e5e7eb;
+  /* deeper for contrast */
+  --night: #0b0b14;
+  --onnight: #f8fafc;
+  --edge: #0f1026;
+  --blob: 0.12;
   /* hero scrim, as bare rgb so the alpha stays tunable */
-  --scrim: 255 253 247;
-  /* tangerine for TEXT on themed surfaces — deepened for AA on light */
-  --accent: #b53a0d;
+  --scrim: 248 249 252;
+  /* brand accent */
+  --accent: #ff6b35;
+  --accent-dark: #e85a24;
+  /* splash colour — Hero overrides this with the picked wall swatch */
+  --brush-paint: #ff6b35;
+  /* fallback for browsers without relative colour; the @supports block below
+     replaces this with a richer oklch version */
+  --brush-ink: color-mix(in srgb, var(--brush-paint) 68%, var(--ink));
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --surface: #141320;
-  --surface-2: #1a1927;
-  --card: #1d1c2b;
-  --ink: #f2efe8;
-  --ink-soft: #c6c3d4;
-  --ink-mute: #9d9ab0;
-  --line: rgba(255, 255, 255, 0.12);
-  --night: #0b0a12;
-  --onnight: #f5f2ea;
-  --edge: #34354d;
-  --blob: 0.1;
-  --scrim: 20 19 32;
+  --surface: #2b1a52;
+  --surface-2: #342060;
+  --card: #352267;
+  --ink: #f7f4ff;
+  --ink-soft: #d7d1ec;
+  --ink-mute: #b9b0d6;
+  --line: rgba(255, 255, 255, 0.16);
+  --night: #1a102f;
+  --onnight: #f7f4ff;
+  --edge: rgba(255, 255, 255, 0.26);
+  --blob: 0.14;
+  --scrim: 43 26 82;
   --accent: #ff8a5c;
+  --brush-ink: color-mix(in srgb, var(--brush-paint) 55%, #ffffff);
   color-scheme: dark;
+}
+
+/* Mixing a pale wall colour (Warm Sand, Chalk) with ink lands on grey taupe.
+   Keep the picked hue instead and force a chroma that shows on both themes. */
+@supports (color: oklch(from red 0.5 0.1 h)) {
+  :root {
+    --brush-ink: oklch(from var(--brush-paint) 0.62 0.085 h);
+  }
+  [data-theme="dark"] {
+    --brush-ink: oklch(from var(--brush-paint) 0.8 0.075 h);
+  }
 }
 
 @theme inline {
@@ -56,10 +77,14 @@
   --color-onnight: var(--onnight);
   --color-edge: var(--edge);
   --color-accent: var(--accent);
+  /* the picked swatch, made readable — use this for any accent that must
+     follow the hero colour instead of hardcoding tangerine */
+  --color-brush-ink: var(--brush-ink);
 
-  /* one family, weight does the work — smaller payload, cleaner corporate voice */
-  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  /* Bricolage for display voice, Manrope for reading, mono for labels */
+  --font-display: var(--font-display-family), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-body-family), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-family), ui-monospace, monospace;
 }
 
 @theme {
@@ -80,7 +105,7 @@
   --color-accent-dark: #ff8a5c;
 
   /* fluid type scale */
-  --text-h1: clamp(2.5rem, 6.2vw, 4.3rem);
+  --text-h1: clamp(2.5rem, 6.2vw, 5rem);
   --text-h1--line-height: 1.04;
   --text-h1--letter-spacing: -0.032em;
   --text-h2: clamp(1.95rem, 4.2vw, 3rem);
@@ -119,6 +144,12 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+section[id],
+div[id] {
+  scroll-margin-top: 96px;
 }
 
 body {
@@ -131,6 +162,78 @@ body {
   transition:
     background-color 0.4s var(--ease-brush),
     color 0.4s var(--ease-brush);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.018;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    display: none;
+  }
+}
+
+/* Custom circle cursor: hide the native arrow only while it is mounted and
+   only where the circle is actually rendered (md+). Typing fields keep their
+   real caret. */
+@media (min-width: 768px) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none;
+  }
+  html.has-custom-cursor input,
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor select {
+    cursor: auto;
+  }
+}
+
+/* The circle itself. Solid ink dot with a surface-coloured halo: dark on the
+   light theme, light on the dark theme, and still readable over the night
+   bands in both. No blend mode — a stacking context would break it anyway. */
+.cursor-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--ink);
+  border: 1.5px solid transparent;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--surface) 88%, transparent),
+    0 6px 18px -6px color-mix(in srgb, #000000 45%, transparent);
+  transition:
+    width 0.22s var(--ease-brush),
+    height 0.22s var(--ease-brush),
+    background-color 0.22s var(--ease-brush),
+    border-color 0.22s var(--ease-brush),
+    box-shadow 0.22s var(--ease-brush),
+    opacity 0.22s var(--ease-brush);
+}
+.cursor-dot[data-mode="text"] {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--surface) 62%, transparent);
+}
+.cursor-dot[data-mode="action"] {
+  width: 44px;
+  height: 44px;
+  /* transparent inside — the label or icon underneath must stay readable */
+  background: transparent;
+  border-color: var(--brush-ink);
+  border-width: 2px;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--surface) 55%, transparent),
+    0 10px 26px -16px color-mix(in srgb, #000000 45%, transparent);
 }
 
 h1,
@@ -157,7 +260,7 @@ p {
 }
 
 :focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 3px solid var(--brush-ink);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -191,11 +294,51 @@ p {
 
 /* one eyebrow treatment everywhere */
 .eyebrow {
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
   line-height: 1.4;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
+}
+
+/* ————————————————————————————————————————————————
+   PAINT UNDERLINE — one brush stroke under a heading's last word
+———————————————————————————————————————————————— */
+.paint-underline {
+  position: absolute;
+  left: -6%;
+  right: -14%;
+  bottom: -0.16em;
+  height: 0.17em;
+  min-width: 1.4em;
+  transform-origin: left center;
+  pointer-events: none;
+  color: var(--brush-ink);
+}
+.paint-underline svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  /* starts after the stroke has finished drawing, then drifts like wet paint */
+  animation: underline-bob 4.2s ease-in-out 1.1s infinite;
+}
+@keyframes underline-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -2px, 0) rotate(-0.35deg);
+  }
+}
+.paint-underline path {
+  fill: currentColor;
+}
+/* always-dark panels need the swatch pushed toward white, not ink */
+.paint-underline-light {
+  color: color-mix(in srgb, var(--brush-paint) 58%, #ffffff);
 }
 
 /* ————————————————————————————————————————————————
@@ -358,9 +501,11 @@ p {
    MOTION UTILITIES
 ———————————————————————————————————————————————— */
 .card-lift {
+  /* fixed ink, not var(--ink): in dark theme the token flips to near-white and
+     the shadow turns into a glow */
   box-shadow:
-    0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent),
-    0 14px 30px -20px color-mix(in srgb, var(--ink) 30%, transparent);
+    0 1px 2px color-mix(in srgb, #0f1026 6%, transparent),
+    0 14px 30px -20px color-mix(in srgb, #0f1026 30%, transparent);
   transition:
     transform 0.55s var(--ease-brush),
     box-shadow 0.55s var(--ease-brush),
@@ -370,8 +515,200 @@ p {
 .card-lift:hover {
   transform: translateY(-6px);
   box-shadow:
-    0 2px 4px color-mix(in srgb, var(--ink) 8%, transparent),
-    0 28px 54px -24px color-mix(in srgb, var(--ink) 40%, transparent);
+    0 2px 4px color-mix(in srgb, #0f1026 8%, transparent),
+    0 28px 54px -24px color-mix(in srgb, #0f1026 40%, transparent);
+}
+
+/* one deep shadow for the big panels (portrait, booking card) */
+.panel-shadow {
+  box-shadow: 0 30px 70px -40px color-mix(in srgb, #0f1026 60%, transparent);
+}
+
+/* ————————————————————————————————————————————————
+   MOTION DETAILS
+———————————————————————————————————————————————— */
+/* picking a wall colour sends it across the whole viewport */
+.paint-bloom {
+  --bloom-ink: var(--bloom);
+  position: fixed;
+  z-index: 80;
+  width: 220vmax;
+  height: 220vmax;
+  margin-left: -110vmax;
+  margin-top: -110vmax;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    var(--bloom-ink) 0%,
+    color-mix(in srgb, var(--bloom-ink) 40%, transparent) 52%,
+    transparent 70%
+  );
+  opacity: 0;
+  animation: paint-bloom 780ms var(--ease-brush) forwards;
+}
+@supports (color: oklch(from red 0.5 0.1 h)) {
+  .paint-bloom {
+    --bloom-ink: oklch(from var(--bloom) 0.62 0.085 h);
+  }
+}
+@keyframes paint-bloom {
+  0% {
+    transform: scale(0.02);
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 0.34;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* hero room drifts slower than the copy in front of it */
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .hero-drift {
+      animation: hero-drift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 90vh;
+      will-change: transform;
+    }
+  }
+}
+@keyframes hero-drift {
+  from {
+    transform: translate3d(0, -2.5%, 0) scale(1.07);
+  }
+  to {
+    transform: translate3d(0, 2.5%, 0) scale(1.07);
+  }
+}
+
+/* review stars land one after another as the card scrolls in */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .star-pop {
+      animation: star-pop 420ms var(--ease-splash) both;
+      animation-timeline: view();
+      animation-range: entry calc(25% + var(--i, 0) * 3%) cover 38%;
+    }
+  }
+}
+@keyframes star-pop {
+  from {
+    transform: scale(0.55);
+    opacity: 0.4;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* booking connector fills with a ragged paint edge */
+.paint-fill {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath fill='%23000' d='M0 0 H93 C97 1.5 90 3.2 94 4.8 C98 6.4 91 8.2 95 10 H0 Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath fill='%23000' d='M0 0 H93 C97 1.5 90 3.2 94 4.8 C98 6.4 91 8.2 95 10 H0 Z'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ————————————————————————————————————————————————
+   SERVICE CARDS — each card owns one palette colour.
+   Colour lives where the eye already is: the icon tile and the title.
+———————————————————————————————————————————————— */
+.service-card {
+  --wash-deep: color-mix(in srgb, var(--wash) 74%, #0f1026);
+  --wash-pastel: color-mix(in srgb, var(--wash) 26%, #ffffff);
+  --wash-mid: color-mix(in srgb, var(--wash) 11%, #ffffff);
+  transition:
+    transform 0.55s var(--ease-brush),
+    box-shadow 0.55s var(--ease-brush),
+    border-color 0.55s var(--ease-brush),
+    background-color 0.55s var(--ease-brush);
+}
+.service-card:hover {
+  border-color: color-mix(in srgb, var(--wash) 50%, var(--line));
+  /* the glow is the card's own colour, not grey */
+  box-shadow: 0 18px 40px -26px color-mix(in srgb, var(--wash) 70%, transparent);
+}
+.service-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  /* pastel tint from the top-right, behind the icon and title */
+  background: radial-gradient(
+    125% 105% at 85% 8%,
+    var(--wash-pastel) 0%,
+    var(--wash-mid) 42%,
+    transparent 76%
+  );
+  opacity: 0.6;
+  transform: scale(1.04);
+  transform-origin: 85% 8%;
+  transition:
+    opacity 0.5s var(--ease-brush),
+    transform 0.65s var(--ease-brush);
+}
+.service-card:hover .service-wash {
+  opacity: 1;
+  transform: scale(1);
+}
+.icon-tile {
+  /* coloured at rest, so the six cards read as six colours before hover */
+  background: color-mix(in srgb, var(--wash) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--wash) 38%, var(--line));
+  color: var(--wash-deep);
+  transition:
+    background-color 0.45s var(--ease-brush),
+    border-color 0.45s var(--ease-brush),
+    color 0.45s var(--ease-brush),
+    transform 0.45s var(--ease-brush);
+}
+.service-card:hover .icon-tile {
+  background: color-mix(in srgb, var(--wash) 34%, var(--card));
+  border-color: color-mix(in srgb, var(--wash) 62%, var(--line));
+  transform: scale(1.05) rotate(-2deg);
+}
+.service-card h3 {
+  transition: color 0.45s var(--ease-brush);
+}
+.service-card:hover h3 {
+  color: var(--wash-deep);
+}
+/* same hand-painted stroke as the section headings, drawn under the title */
+.card-stroke {
+  position: absolute;
+  left: -5%;
+  right: -7%;
+  bottom: -0.1em;
+  height: 0.15em;
+  overflow: visible;
+  fill: var(--wash-deep);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.55s var(--ease-brush) 0.06s;
+}
+.service-card:hover .card-stroke {
+  transform: scaleX(1);
+}
+
+/* dark theme: the same recipes, flipped so nothing muddies */
+[data-theme="dark"] .service-card {
+  --wash-deep: color-mix(in srgb, var(--wash) 68%, #f7f4ff);
+  --wash-pastel: color-mix(in srgb, var(--wash) 30%, #f7f4ff);
+  --wash-mid: color-mix(in srgb, var(--wash) 14%, #f7f4ff);
+}
+[data-theme="dark"] .service-wash {
+  opacity: 0.28;
+}
+[data-theme="dark"] .service-card:hover .service-wash {
+  opacity: 0.55;
 }
 
 /* ————————————————————————————————————————————————
@@ -453,26 +790,33 @@ p {
   --room-wall-dim: rgba(0, 0, 0, 0.32);
 }
 
-/* the native pointer only disappears on fine-pointer devices that opt in */
-.stage,
-.stage * {
-  cursor: none;
+/* site-wide brush cursor on fine pointers */
+html.has-brush,
+html.has-brush * {
+  cursor: none !important;
+}
+html.has-brush input,
+html.has-brush textarea,
+html.has-brush select,
+html.has-brush [contenteditable=""],
+html.has-brush [contenteditable="true"] {
+  cursor: text !important;
 }
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .stage,
-  .stage * {
-    cursor: auto;
+  html.has-brush,
+  html.has-brush * {
+    cursor: auto !important;
   }
 }
 
 .brush-cursor {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 62;
-  width: 34px;
-  height: 34px;
-  margin: -3px 0 0 -3px;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  margin: -4px 0 0 -4px;
   pointer-events: none;
   will-change: transform;
 }
@@ -489,6 +833,80 @@ p {
   opacity: 0;
   animation: drop-fall var(--dur, 720ms) cubic-bezier(0.3, 0.7, 0.5, 1) forwards;
   will-change: transform, opacity;
+}
+
+.paint-splat {
+  position: absolute;
+  z-index: 61;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  animation: splat-scale 420ms var(--ease-splash) forwards;
+}
+.paint-splat::before {
+  content: "";
+  position: absolute;
+  left: -26px;
+  top: -26px;
+  width: 52px;
+  height: 52px;
+  border-radius: 58% 42% 50% 50%;
+  background: radial-gradient(circle, var(--splat, #ff6b35) 0%, var(--splat, #ff6b35) 40%, transparent 72%);
+  filter: blur(0.2px);
+  opacity: 0.9;
+  transform: scale(0.25);
+  animation: splat-blob 420ms var(--ease-splash) forwards;
+}
+.paint-burst {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--splat, #ff6b35);
+  transform: rotate(var(--a)) translate(0) scale(0.4);
+  opacity: 0.9;
+  animation: burst 220ms var(--ease-splash) forwards;
+  animation-duration: var(--d, 240ms);
+}
+
+@keyframes splat-scale {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes splat-blob {
+  0% {
+    transform: scale(0.25);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+}
+@keyframes burst {
+  0% {
+    transform: rotate(var(--a)) translate(0) scale(0.4);
+    opacity: 0.9;
+  }
+  70% {
+    transform: rotate(var(--a)) translate(var(--r)) scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(var(--a)) translate(calc(var(--r) * 1.2)) scale(0.25);
+    opacity: 0;
+  }
 }
 
 @keyframes drop-fall {

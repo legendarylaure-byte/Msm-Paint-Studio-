@@ -26,10 +26,25 @@ type Uniform = { wall: string; room: RoomId; pending: string | null; onDone: () 
 
 export function RoomStage({ wall, room, pending, onDone }: Uniform) {
   const reduce = useReducedMotionSafe();
-  const cursor = useRef<HTMLDivElement>(null);
   const drops = useRef<HTMLDivElement>(null);
   const last = useRef({ x: 0, y: 0 });
   const paint = pending ?? wall;
+
+  const spawnDrop = useCallback(
+    (layer: HTMLDivElement, x: number, y: number, colour: string) => {
+      if (layer.childElementCount > 14) layer.firstElementChild?.remove();
+      const drop = document.createElement("span");
+      drop.className = "paint-drop";
+      drop.style.left = `${x}px`;
+      drop.style.top = `${y}px`;
+      drop.style.setProperty("--drop", colour);
+      drop.style.setProperty("--dx", `${Math.round(Math.random() * 26 - 13)}px`);
+      drop.style.setProperty("--dur", `${540 + Math.random() * 380}ms`);
+      drop.addEventListener("animationend", () => drop.remove());
+      layer.appendChild(drop);
+    },
+    [],
+  );
 
   const move = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -37,11 +52,6 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
       const rect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-
-      if (cursor.current) {
-        cursor.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        cursor.current.style.opacity = "1";
-      }
 
       // one droplet per ~30px of travel, so a slow drag still paints a trail
       const dx = x - last.current.x;
@@ -51,31 +61,51 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
 
       const layer = drops.current;
       if (!layer) return;
-      if (layer.childElementCount > 14) layer.firstElementChild?.remove();
-
-      const drop = document.createElement("span");
-      drop.className = "paint-drop";
-      drop.style.left = `${x}px`;
-      drop.style.top = `${y}px`;
-      drop.style.setProperty("--drop", paint);
-      drop.style.setProperty("--dx", `${Math.round(Math.random() * 26 - 13)}px`);
-      drop.style.setProperty("--dur", `${540 + Math.random() * 380}ms`);
-      drop.addEventListener("animationend", () => drop.remove());
-      layer.appendChild(drop);
+      spawnDrop(layer, x, y, paint);
     },
-    [paint, reduce],
+    [paint, reduce, spawnDrop],
   );
 
-  const hide = useCallback(() => {
-    if (cursor.current) cursor.current.style.opacity = "0";
-  }, []);
+  const splat = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (reduce) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const layer = drops.current;
+      if (!layer) return;
+
+      const burst = document.createElement("div");
+      burst.className = "paint-splat";
+      burst.style.left = `${x}px`;
+      burst.style.top = `${y}px`;
+      burst.style.setProperty("--splat", paint);
+      for (let i = 0; i < 8; i++) {
+        const d = document.createElement("span");
+        d.className = "paint-burst";
+        d.style.setProperty("--a", `${(Math.PI * 2 * i) / 8 + (Math.random() - 0.5) * 0.4}rad`);
+        d.style.setProperty("--r", `${14 + Math.random() * 10}px`);
+        d.style.setProperty("--d", `${220 + Math.random() * 120}ms`);
+        burst.appendChild(d);
+      }
+      burst.addEventListener("animationend", () => burst.remove(), { once: true });
+      layer.appendChild(burst);
+
+      for (let i = 0; i < 4; i++) {
+        spawnDrop(layer, x + (Math.random() - 0.5) * 10, y + (Math.random() - 0.5) * 6, paint);
+      }
+    },
+    [paint, reduce, spawnDrop],
+  );
 
   return (
     <div
       className="stage relative h-full w-full overflow-hidden"
       onPointerMove={move}
-      onPointerLeave={hide}
-      onPointerDown={move}
+      onPointerDown={(e) => {
+        move(e);
+        splat(e);
+      }}
     >
       <svg
         viewBox="0 0 1200 800"
@@ -156,7 +186,10 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
 
         <path d={LEFT} fill="#000" opacity="0.11" />
         <path d={RIGHT} fill="#000" opacity="0.05" />
-        <path d={BACK} fill="url(#glassGlow)" />
+        <path
+          d="M815 210H985V370H815Z"
+          fill="url(#glassGlow)"
+        />
 
         <path d={CEILING} fill="url(#ceiling)" />
         <path d={FLOOR} fill="url(#floor)" />
@@ -167,7 +200,7 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
           ))}
         </g>
 
-        <path d="M790 610H1004L1096 800H650Z" fill="url(#shaft)" />
+        <path d="M818 610H983L1072 800H726Z" fill="url(#shaft)" />
 
         {/* skirting + wall/floor junction shadow */}
         <rect x="150" y="592" width="900" height="18" fill="var(--room-trim)" />
@@ -177,11 +210,12 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
 
         {/* ——— window ——— */}
         <g>
-          <rect x="770" y="198" width="234" height="228" rx="3" fill="var(--room-trim)" />
-          <rect x="782" y="210" width="210" height="204" fill="url(#sky)" />
-          <rect x="884" y="210" width="5" height="204" fill="var(--room-trim)" opacity="0.85" />
-          <rect x="782" y="308" width="210" height="5" fill="var(--room-trim)" opacity="0.85" />
-          <rect x="760" y="426" width="254" height="9" rx="3" fill="var(--room-trim)" />
+          <rect x="815" y="210" width="170" height="160" rx="3" fill="var(--room-trim)" />
+          <rect x="826" y="222" width="148" height="138" fill="url(#sky)" />
+          <rect x="898" y="222" width="4" height="138" fill="var(--room-trim)" opacity="0.9" />
+          <rect x="826" y="288" width="148" height="4" fill="var(--room-trim)" opacity="0.9" />
+          <rect x="806" y="370" width="188" height="8" rx="3" fill="var(--room-trim)" />
+          <rect x="814" y="378" width="172" height="10" rx="2" fill="var(--room-trim)" />
         </g>
 
         {/* ——— furniture ——— */}
@@ -193,15 +227,6 @@ export function RoomStage({ wall, room, pending, onDone }: Uniform) {
       </svg>
 
       <div ref={drops} aria-hidden className="pointer-events-none absolute inset-0 z-40" />
-      {!reduce && (
-        <div ref={cursor} aria-hidden className="brush-cursor opacity-0">
-          <svg viewBox="0 0 34 34" width="34" height="34">
-            <path d="M4 2l9.5 9.5-4 4L0 6z" fill={paint} stroke="rgba(0,0,0,.28)" strokeWidth="1" />
-            <path d="M12.5 12.5l5 5-2.5 2.5-5-5z" fill="#cfc9c0" stroke="rgba(0,0,0,.25)" strokeWidth="1" />
-            <path d="M18 18l12.5 12.5" stroke="#24222e" strokeWidth="5.5" strokeLinecap="round" />
-          </svg>
-        </div>
-      )}
     </div>
   );
 }

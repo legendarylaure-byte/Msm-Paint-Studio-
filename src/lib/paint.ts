@@ -24,6 +24,45 @@ export const rooms = [
 
 export type RoomId = (typeof rooms)[number]["id"];
 
+/** "#abc" | "#aabbcc" -> [r, g, b]. Null on anything else. */
+export function parseHex(hex: string): [number, number, number] | null {
+  const h = hex.trim().replace("#", "");
+  if (h.length === 3) {
+    return [h[0] + h[0], h[1] + h[1], h[2] + h[2]].map((p) => parseInt(p, 16)) as [
+      number,
+      number,
+      number,
+    ];
+  }
+  if (h.length === 6) {
+    return [
+      parseInt(h.slice(0, 2), 16),
+      parseInt(h.slice(2, 4), 16),
+      parseInt(h.slice(4, 6), 16),
+    ];
+  }
+  return null;
+}
+
+/**
+ * Pale swatches vanish on white, dark ones vanish on the dark theme. Nudge the
+ * swatch toward a visible tone — hue stays, only lightness moves.
+ * The CSS side does the same thing with `--brush-ink` for the cursor + underline.
+ */
+export function readableRgb(hex: string, dark: boolean): [number, number, number] {
+  const rgb = parseHex(hex) ?? [255, 107, 53];
+  const [r, g, b] = rgb;
+  const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  const mix = !dark && lum > 0.75 ? 0.45 : dark && lum < 0.45 ? 0.55 : 0;
+  if (!mix) return rgb;
+  const toward = dark ? 255 : 15;
+  return [
+    Math.round(r + (toward - r) * mix),
+    Math.round(g + (toward - g) * mix),
+    Math.round(b + (toward - b) * mix),
+  ];
+}
+
 /**
  * Rough-edged vertical brush edge, drawn at 200% width.
  * Sliding mask-position 100% -> 0% rolls it across the element.

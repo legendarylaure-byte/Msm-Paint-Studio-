@@ -8,8 +8,8 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const links = [
   { href: "/#services", label: "Services" },
-  { href: "/#process", label: "How it works" },
-  { href: "/#work", label: "Our work" },
+  { href: "/#process", label: "Process" },
+  { href: "/#painter", label: "Our painter" },
   { href: "/#faq", label: "FAQ" },
 ];
 
@@ -26,6 +26,16 @@ export function Header() {
 
   // Mobile links close the menu in their own onClick; no effect needed.
 
+  useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [open]);
+
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-500 ${
@@ -40,10 +50,10 @@ export function Header() {
             <Paintbrush className="h-5 w-5" strokeWidth={2.4} />
           </span>
           <span className="leading-none">
-            <span className="block font-display text-[1.06rem] font-extrabold tracking-tight">
+            <span className="block font-display text-lg font-extrabold tracking-tight">
               MSM Painting
             </span>
-            <span className="block text-[0.7rem] font-extrabold uppercase tracking-[0.2em] text-accent">
+            <span className="block text-xs font-extrabold uppercase tracking-[0.2em] text-accent">
               Studio
             </span>
           </span>
@@ -54,12 +64,12 @@ export function Header() {
             <Link
               key={l.href}
               href={l.href}
-              className="group relative rounded-full px-4 py-2 text-[0.95rem] font-semibold text-ink-soft transition-colors hover:text-ink"
+              className="group relative rounded-full px-4 py-2 text-base font-medium text-ink-soft transition-colors duration-200 hover:text-ink"
             >
               <span className="relative z-10">{l.label}</span>
               <span
                 aria-hidden
-                className="absolute inset-x-3 bottom-1.5 h-2 origin-left scale-x-0 rounded-full bg-tangerine/45 transition-transform duration-300 group-hover:scale-x-100"
+                className="absolute inset-x-4 bottom-1.5 h-px origin-center scale-x-0 rounded-full bg-ink/40 transition-transform duration-300 group-hover:scale-x-100"
               />
             </Link>
           ))}
@@ -91,8 +101,8 @@ export function Header() {
 
       {/* Mobile sheet */}
       <div
-        className={`overflow-hidden border-t border-line bg-surface transition-[max-height] duration-500 lg:hidden ${
-          open ? "max-h-96" : "max-h-0"
+        className={`overflow-hidden border-t border-line/70 bg-surface/95 backdrop-blur transition-[max-height,opacity] duration-300 lg:hidden ${
+          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <nav className="flex flex-col gap-1 p-5" aria-label="Mobile">
@@ -101,7 +111,7 @@ export function Header() {
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="rounded-xl px-4 py-3 font-semibold text-ink-soft transition-colors hover:bg-tangerine/10 hover:text-ink"
+              className="rounded-xl px-4 py-3 font-semibold text-ink-soft transition-colors hover:bg-surface-2 hover:text-ink"
             >
               {l.label}
             </Link>

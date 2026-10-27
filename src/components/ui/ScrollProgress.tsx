@@ -27,7 +27,7 @@ export default function ScrollProgress() {
       className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px]"
     >
       <div
-        className="h-full origin-left bg-gradient-to-r from-tangerine to-tangerine-dark shadow-[0_0_12px_rgba(255,107,53,0.7)]"
+        className="h-full origin-left bg-brush-ink"
         style={{ transform: `scaleX(${p})` }}
       />
     </div>

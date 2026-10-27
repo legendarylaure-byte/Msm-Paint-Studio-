@@ -47,7 +47,7 @@ const slots = [
 const steps = ["Job", "When", "About you"];
 
 const input =
-  "w-full rounded-xl border border-line bg-card px-4 py-3.5 text-[0.98rem] text-ink placeholder:text-ink-mute transition-colors focus:border-tangerine focus:outline-none";
+  "w-full rounded-xl border border-line bg-card px-4 py-3.5 text-base text-ink placeholder:text-ink-mute transition-colors focus:border-tangerine focus:outline-none";
 
 export function Booking() {
   const reduce = useReducedMotionSafe();
@@ -151,7 +151,7 @@ export function Booking() {
                 {i < step ? "✓" : i + 1}
               </span>
               <span
-                className={`text-[0.7rem] font-bold uppercase tracking-wider ${
+                className={`text-xs font-bold uppercase tracking-wider ${
                   i <= step ? "text-ink" : "text-ink-mute"
                 }`}
               >
@@ -161,7 +161,7 @@ export function Booking() {
             {i < steps.length - 1 && (
               <div className="relative -mt-5 h-[5px] flex-1 overflow-hidden rounded-full bg-line">
                 <div
-                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-tangerine to-sunshine transition-all duration-500"
+                  className="paint-fill absolute inset-y-0 left-0 bg-gradient-to-r from-tangerine to-tangerine-dark transition-all duration-500"
                   style={{ width: i < step ? "100%" : "0%" }}
                 />
               </div>
@@ -170,7 +170,7 @@ export function Booking() {
         ))}
       </div>
 
-      <div className="rounded-3xl border border-line bg-card p-6 shadow-[0_30px_60px_-40px_rgba(22,22,42,0.5)] sm:p-8">
+      <div className="rounded-[20px] border border-line bg-card p-6 panel-shadow sm:p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
