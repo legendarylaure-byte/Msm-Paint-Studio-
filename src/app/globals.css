@@ -114,6 +114,13 @@
   --text-h3: clamp(1.28rem, 1.1rem + 0.75vw, 1.6rem);
   --text-h3--line-height: 1.24;
   --text-h3--letter-spacing: -0.018em;
+  /* the two places the page is allowed to get loud */
+  --text-quote: clamp(1.65rem, 4.6vw, 4rem);
+  --text-quote--line-height: 1.14;
+  --text-quote--letter-spacing: -0.024em;
+  --text-stat: clamp(2.6rem, 6.4vw, 6rem);
+  --text-stat--line-height: 0.94;
+  --text-stat--letter-spacing: -0.04em;
 
   /* motion */
   --ease-brush: cubic-bezier(0.22, 1, 0.36, 1);

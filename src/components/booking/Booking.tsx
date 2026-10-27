@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   CalendarDays,
@@ -13,7 +13,8 @@ import {
   Fence,
   Sofa,
 } from "lucide-react";
-import { services } from "@/lib/site";
+import { services, site } from "@/lib/site";
+import { palette } from "@/lib/paint";
 import { useTodayISO } from "@/lib/use-today";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 
@@ -66,11 +67,42 @@ export function Booking() {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState("");
 
+  /* the hero's picked wall colour — carried into the quote */
+  const [paint, setPaint] = useState<string | null>(null);
+  useEffect(() => {
+    const read = (hex: string) =>
+      setPaint(palette.find((c) => c.hex.toLowerCase() === hex.trim().toLowerCase())?.hex ?? null);
+    read(getComputedStyle(document.documentElement).getPropertyValue("--brush-paint"));
+    const onPaint = (e: Event) => read((e as CustomEvent<string>).detail);
+    window.addEventListener("brush:paint", onPaint);
+    return () => window.removeEventListener("brush:paint", onPaint);
+  }, []);
+  const paintName = palette.find((c) => c.hex === paint)?.name ?? null;
+
   const set = <K extends keyof BookingData>(k: K, v: BookingData[K]) =>
     setData((d) => ({ ...d, [k]: v }));
 
   // Client-only so the page stays statically prerenderable.
   const minDate = useTodayISO();
+
+  /* if the POST fails, the enquiry still reaches us as a pre-filled email */
+  const mailtoHref = `mailto:${site.email}?subject=${encodeURIComponent(
+    `Quote request — ${data.service || "painting"}`,
+  )}&body=${encodeURIComponent(
+    [
+      `Name: ${data.name}`,
+      `Phone: ${data.phone}`,
+      `Email: ${data.email}`,
+      `Address: ${data.address}`,
+      `Service: ${data.service}`,
+      `Property: ${data.property}`,
+      `Preferred: ${data.date} ${data.slot}`,
+      paintName ? `Colour: ${paintName}` : "",
+      data.details ? `Details: ${data.details}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+  )}`;
 
   const stepValid = () => {
     if (step === 0) return data.service && data.property;
@@ -90,7 +122,7 @@ export function Booking() {
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, colour: paintName }),
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "Something went wrong");
@@ -296,6 +328,18 @@ export function Booking() {
                   </Field>
                 </div>
 
+                {paintName && (
+                  <div className="flex items-center gap-3 rounded-xl bg-surface-2 px-4 py-3 text-sm font-semibold text-ink-soft">
+                    <span
+                      aria-hidden
+                      className="h-4 w-4 shrink-0 rounded-full border border-line"
+                      style={{ background: paint ?? undefined }}
+                    />
+                    Your quote includes{" "}
+                    <strong className="font-bold text-ink">{paintName}</strong> walls
+                  </div>
+                )}
+
                 <div className="rounded-xl bg-tangerine/10 px-4 py-3 text-sm font-semibold text-ink">
                   <strong>Review:</strong> {data.service} · {data.property} ·{" "}
                   {data.date} · {data.slot}
@@ -303,7 +347,14 @@ export function Booking() {
 
                 {status === "error" && (
                   <p className="rounded-xl bg-berry/10 px-4 py-3 text-sm font-semibold text-berry-dark">
-                    {error}
+                    {error}. Send it straight to us instead —{" "}
+                    <a
+                      href={mailtoHref}
+                      className="underline decoration-2 underline-offset-2"
+                    >
+                      email these details
+                    </a>{" "}
+                    or call {site.phone}.
                   </p>
                 )}
               </div>

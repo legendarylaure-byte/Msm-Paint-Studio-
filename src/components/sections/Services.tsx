@@ -38,23 +38,39 @@ export function Services() {
           intro="From a single bedroom to a full warehouse, the prep is the same obsession: clean, protect, prime, then lay on colour that lasts."
         />
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-12">
           {services.map((s, i) => {
             const Icon = icons[s.icon] ?? Home;
             const paint = cardPaints[i % cardPaints.length];
+            const feature = i === 0;
+            /* 7+5 then 6,6,6,6 — the eye lands on the first card, not on a wall of equals */
+            const span = feature
+              ? "sm:col-span-2 lg:col-span-7"
+              : i === 1
+                ? "lg:col-span-5"
+                : "lg:col-span-6";
             return (
-              <Reveal key={s.slug} delay={i * 0.07}>
+              <Reveal key={s.slug} delay={i * 0.07} className={span}>
                 <article
-                  className="service-card card-lift group relative h-full overflow-hidden rounded-[20px] border border-line bg-card p-7"
+                  className={`service-card card-lift group relative h-full overflow-hidden rounded-[20px] border border-line bg-card ${
+                    feature ? "p-8 sm:p-9" : "p-7"
+                  }`}
                   style={{ "--wash": paint } as CSSProperties}
                 >
                   <span aria-hidden className="service-wash" />
 
-                  <span className="icon-tile relative grid h-14 w-14 place-items-center rounded-xl border">
-                    <Icon className="h-7 w-7 transition-transform duration-500 group-hover:scale-110" strokeWidth={2.2} />
+                  <span
+                    className={`icon-tile relative grid place-items-center rounded-xl border ${
+                      feature ? "h-16 w-16" : "h-14 w-14"
+                    }`}
+                  >
+                    <Icon
+                      className={feature ? "h-8 w-8 transition-transform duration-500 group-hover:scale-110" : "h-7 w-7 transition-transform duration-500 group-hover:scale-110"}
+                      strokeWidth={2.2}
+                    />
                   </span>
 
-                  <h3 className="relative mt-5 text-h3 font-extrabold">
+                  <h3 className={`relative font-extrabold ${feature ? "mt-6 text-h2" : "mt-5 text-h3"}`}>
                     <span className="relative inline-block">
                       {s.title}
                       <svg
@@ -67,11 +83,19 @@ export function Services() {
                       </svg>
                     </span>
                   </h3>
-                  <p className="relative mt-3 text-base leading-relaxed text-ink-soft">
+                  <p
+                    className={`relative mt-3 leading-relaxed text-ink-soft ${
+                      feature ? "max-w-xl text-lg" : "text-base"
+                    }`}
+                  >
                     {s.blurb}
                   </p>
 
-                  <ul className="relative mt-5 space-y-2 border-t border-line pt-4">
+                  <ul
+                    className={`relative mt-5 gap-x-8 gap-y-2 border-t border-line pt-4 ${
+                      feature ? "grid sm:grid-cols-2" : "space-y-2"
+                    }`}
+                  >
                     {s.points.map((p) => (
                       <li
                         key={p}

@@ -43,11 +43,17 @@ export function Hero() {
   /* the picked colour blooming across the viewport */
   const [bloom, setBloom] = useState<{ id: number; x: number; y: number; color: string } | null>(null);
 
-  useEffect(() => {
+  const setBrushPaint = useCallback((hex: string) => {
     if (typeof document !== "undefined") {
-      document.documentElement.style.setProperty("--brush-paint", wall);
+      document.documentElement.style.setProperty("--brush-paint", hex);
+      /* the booking form listens for this so the quote carries the colour */
+      window.dispatchEvent(new CustomEvent("brush:paint", { detail: hex }));
     }
-  }, [wall]);
+  }, []);
+
+  useEffect(() => {
+    setBrushPaint(wall);
+  }, [setBrushPaint, wall]);
 
   const done = useCallback(() => {
     const p = pendingRef.current;
@@ -58,12 +64,6 @@ export function Hero() {
 
   const active = pending ?? wall;
   const activeName = palette.find((c) => c.hex === active)?.name ?? "Custom";
-
-  const setBrushPaint = useCallback((hex: string) => {
-    if (typeof document !== "undefined") {
-      document.documentElement.style.setProperty("--brush-paint", hex);
-    }
-  }, []);
 
   const pick = useCallback(
     (hex: string, x: number, y: number) => {
@@ -149,7 +149,7 @@ export function Hero() {
               >
                 <Link href="/#book" className="btn btn-primary gloss group">
                   <span className="relative z-10 flex items-center gap-2">
-                    Book a free quote
+                    Get {activeName} quoted
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
@@ -205,7 +205,8 @@ export function Hero() {
                   })}
                 </div>
                 <p aria-live="polite" className="mt-2.5 text-xs text-ink-soft">
-                  {activeName} · screen colour is a guide — we&apos;ll bring the fan deck to the quote.
+                  <strong className="font-bold text-ink">{activeName}</strong> travels with
+                  your quote. Screen shade is a guide — we bring the fan deck.
                 </p>
               </div>
             </div>

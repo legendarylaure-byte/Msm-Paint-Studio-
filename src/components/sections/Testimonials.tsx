@@ -4,6 +4,8 @@ import { testimonials } from "@/lib/site";
 import { Reveal, SectionHeading } from "@/components/ui/Reveal";
 
 export function Testimonials() {
+  const [lead, ...rest] = testimonials;
+
   return (
     <section id="testimonials" className="scroll-mt-24 py-20 sm:py-28">
       {/* deliberately wider than every other section — breaks the 7xl rhythm */}
@@ -15,45 +17,59 @@ export function Testimonials() {
           align="left"
         />
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.name} delay={i * 0.09}>
-              <figure className="card-lift relative h-full rounded-[20px] border border-line bg-card p-7">
-                <Quote
-                  className="absolute top-5 right-5 h-9 w-9 text-ink/15"
+        {/* one voice, at full size — no cards, no equal-weight grid */}
+        <Reveal className="mt-12 sm:mt-16">
+          <figure className="relative border-t border-line pt-10 sm:pt-12">
+            <Quote
+              className="absolute top-10 right-0 hidden h-16 w-16 text-ink/10 sm:block"
+              aria-hidden
+            />
+            <div className="flex gap-1" aria-label={`${lead.stars} out of 5 stars`}>
+              {Array.from({ length: lead.stars }).map((_, s) => (
+                <Star
+                  key={s}
+                  className="star-pop h-5 w-5 fill-brush-ink text-brush-ink"
+                  style={{ "--i": s } as CSSProperties}
                   aria-hidden
                 />
-                <div className="flex gap-1" aria-label={`${t.stars} out of 5 stars`}>
-                  {Array.from({ length: t.stars }).map((_, s) => (
-                    <Star
-                      key={s}
-                      className="star-pop h-5 w-5 fill-brush-ink text-brush-ink"
-                      style={{ "--i": s } as CSSProperties}
-                      aria-hidden
-                    />
-                  ))}
-                </div>
-                <blockquote className="mt-4 font-display text-xl leading-snug font-medium text-ink text-pretty">
+              ))}
+            </div>
+            <blockquote className="mt-6 max-w-4xl font-display text-quote font-medium text-ink text-pretty">
+              {lead.quote}
+            </blockquote>
+            <figcaption className="mt-8 flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-full bg-ink font-display text-lg font-extrabold text-surface">
+                {lead.name.charAt(0)}
+              </span>
+              <span>
+                <span className="block font-extrabold text-ink">{lead.name}</span>
+                <span className="flex items-center gap-2 text-sm text-ink-mute">
+                  <span>{lead.area}</span>
+                  {lead.tag && (
+                    <>
+                      <span className="text-ink-mute/40">•</span>
+                      <span className="rounded-full border border-line/70 px-2 py-0.5 text-xs uppercase tracking-wide">
+                        {lead.tag}
+                      </span>
+                    </>
+                  )}
+                </span>
+              </span>
+            </figcaption>
+          </figure>
+        </Reveal>
+
+        {/* the rest, kept quiet so the lead quote wins */}
+        <div className="mt-12 grid gap-8 border-t border-line pt-8 sm:grid-cols-2 sm:gap-12">
+          {rest.map((t, i) => (
+            <Reveal key={t.name} delay={i * 0.08}>
+              <figure>
+                <blockquote className="text-lg leading-relaxed text-ink-soft text-pretty">
                   {t.quote}
                 </blockquote>
-                <figcaption className="mt-5 flex items-center gap-3 border-t border-line pt-4">
-                  <span className="grid h-11 w-11 place-items-center rounded-full bg-ink font-display text-lg font-extrabold text-surface">
-                    {t.name.charAt(0)}
-                  </span>
-                  <span>
-                    <span className="block font-extrabold text-ink">{t.name}</span>
-                    <span className="flex items-center gap-2 text-sm text-ink-mute">
-                      <span>{t.area}</span>
-                      {(t as any).tag && (
-                        <>
-                          <span className="text-ink-mute/40">•</span>
-                          <span className="rounded-full border border-line/70 px-2 py-0.5 text-xs uppercase tracking-wide">
-                            {(t as any).tag}
-                          </span>
-                        </>
-                      )}
-                    </span>
-                  </span>
+                <figcaption className="mt-3 text-sm font-bold text-ink">
+                  {t.name}
+                  <span className="ml-2 font-medium text-ink-mute">{t.area}</span>
                 </figcaption>
               </figure>
             </Reveal>

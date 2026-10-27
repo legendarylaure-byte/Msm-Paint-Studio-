@@ -25,7 +25,15 @@ const values = [
   },
 ];
 
-function Counter({ value, suffix }: { value: number; suffix: string }) {
+function Counter({
+  value,
+  suffix,
+  className = "",
+}: {
+  value: number;
+  suffix: string;
+  className?: string;
+}) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
   const reduce = useReducedMotionSafe();
@@ -50,9 +58,9 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   const shown = n === null ? value : n;
 
   return (
-    <span ref={ref} className="text-[clamp(2.2rem,4.4vw,3.2rem)] font-bold">
+    <span ref={ref} className={`block font-bold ${className}`}>
       <span className="font-mono tracking-tight">{shown}</span>
-      <span className="font-body text-[0.46em] font-bold tracking-wide text-accent-dark/80">{suffix}</span>
+      <span className="font-body text-[0.34em] font-bold tracking-wide text-onnight/45">{suffix}</span>
     </span>
   );
 }
@@ -80,37 +88,44 @@ export function WhyMSM() {
             </Reveal>
 
             <Reveal delay={0.18}>
-              <div className="mt-9 grid grid-cols-2 gap-5">
-                {site.stats.map((s) => (
-                  <div
-                    key={s.label}
-                    className="rounded-2xl border border-onnight/12 bg-onnight/[0.05] p-5 transition-colors duration-500 hover:border-accent-dark/40 hover:bg-onnight/[0.09]"
-                  >
-                    <span className="text-accent-dark">
-                      <Counter value={s.value} suffix={s.suffix} />
-                    </span>
-                    <p className="mt-1 text-sm font-semibold text-onnight/65">{s.label}</p>
-                  </div>
-                ))}
-              </div>
+              <p className="mt-6 flex items-center gap-3 text-sm font-bold uppercase tracking-[0.16em] text-onnight/45">
+                <span className="h-px w-10 bg-onnight/25" />
+                Berwick · Casey · Cardinia
+              </p>
             </Reveal>
           </div>
 
-          <div className="space-y-5">
+          {/* values as a list, not three more cards */}
+          <div className="border-t border-onnight/12">
             {values.map((v, i) => (
               <Reveal key={v.title} delay={i * 0.08}>
-                <div className="flex gap-5 rounded-[20px] border border-onnight/12 bg-onnight/[0.05] p-6 transition-colors duration-500 hover:border-accent-dark/40 hover:bg-onnight/[0.09]">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent-dark/15">
-                    <v.icon className="h-6 w-6 text-accent-dark" strokeWidth={2.1} />
+                <div className="flex gap-5 border-b border-onnight/12 py-7">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-dark/15">
+                    <v.icon className="h-5.5 w-5.5 text-accent-dark" strokeWidth={2.1} />
                   </span>
                   <div>
                     <h3 className="text-h3 font-extrabold text-onnight">{v.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-onnight/65">{v.text}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-onnight/65">{v.text}</p>
                   </div>
                 </div>
               </Reveal>
             ))}
           </div>
+        </div>
+
+        {/* the numbers earn the full width */}
+        <div className="mt-14 grid grid-cols-2 gap-y-10 border-t border-onnight/12 pt-10 sm:mt-20 sm:grid-cols-4">
+          {site.stats.map((s) => (
+            <div
+              key={s.label}
+              className="px-1 sm:border-l sm:border-onnight/12 sm:px-7 sm:first:border-l-0 sm:first:pl-0"
+            >
+              <Counter value={s.value} suffix={s.suffix} className="text-stat text-onnight" />
+              <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-onnight/45">
+                {s.label}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
