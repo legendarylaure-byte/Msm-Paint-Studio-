@@ -11,7 +11,7 @@ export function FAQ() {
   return (
     <section id="faq" className="relative scroll-mt-24 py-20 sm:py-28">
       {/* the one split section — heading sits beside the content, not above it */}
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeading

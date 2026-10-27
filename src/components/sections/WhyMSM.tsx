@@ -118,7 +118,7 @@ export function WhyMSM() {
           {site.stats.map((s) => (
             <div
               key={s.label}
-              className="px-1 sm:border-l sm:border-onnight/12 sm:px-7 sm:first:border-l-0 sm:first:pl-0"
+              className="px-1 sm:border-l sm:border-onnight/12 sm:px-7 sm:first:border-l-0 sm:first:pl-0 sm:last:pr-0"
             >
               <Counter value={s.value} suffix={s.suffix} className="text-stat text-onnight" />
               <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-onnight/45">

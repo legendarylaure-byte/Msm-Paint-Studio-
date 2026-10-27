@@ -167,7 +167,13 @@ export function SectionHeading({
       </h2>
       {intro && (
         <Reveal delay={0.12}>
-          <p className="mt-4 text-lg leading-relaxed text-ink-soft">{intro}</p>
+          <p
+            className={`mt-4 max-w-xl text-lg leading-relaxed text-ink-soft ${
+              align === "center" ? "mx-auto" : ""
+            }`}
+          >
+            {intro}
+          </p>
         </Reveal>
       )}
     </div>

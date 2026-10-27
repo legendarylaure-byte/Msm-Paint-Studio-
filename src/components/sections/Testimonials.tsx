@@ -8,8 +8,8 @@ export function Testimonials() {
 
   return (
     <section id="testimonials" className="scroll-mt-24 py-20 sm:py-28">
-      {/* deliberately wider than every other section — breaks the 7xl rhythm */}
-      <div className="mx-auto max-w-[86rem] px-5 sm:px-8">
+      {/* same container as every other section — the page has one left edge */}
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Happy clients"
           title="The kind of words that"

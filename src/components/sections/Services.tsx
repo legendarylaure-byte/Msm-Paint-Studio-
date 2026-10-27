@@ -53,7 +53,7 @@ export function Services() {
               <Reveal key={s.slug} delay={i * 0.07} className={span}>
                 <article
                   className={`service-card card-lift group relative h-full overflow-hidden rounded-[20px] border border-line bg-card ${
-                    feature ? "p-8 sm:p-9" : "p-7"
+                    feature ? "p-7 sm:p-8" : "p-6"
                   }`}
                   style={{ "--wash": paint } as CSSProperties}
                 >
@@ -61,16 +61,16 @@ export function Services() {
 
                   <span
                     className={`icon-tile relative grid place-items-center rounded-xl border ${
-                      feature ? "h-16 w-16" : "h-14 w-14"
+                      feature ? "h-14 w-14" : "h-12 w-12"
                     }`}
                   >
                     <Icon
-                      className={feature ? "h-8 w-8 transition-transform duration-500 group-hover:scale-110" : "h-7 w-7 transition-transform duration-500 group-hover:scale-110"}
+                      className={feature ? "h-7 w-7 transition-transform duration-500 group-hover:scale-110" : "h-6 w-6 transition-transform duration-500 group-hover:scale-110"}
                       strokeWidth={2.2}
                     />
                   </span>
 
-                  <h3 className={`relative font-extrabold ${feature ? "mt-6 text-h2" : "mt-5 text-h3"}`}>
+                  <h3 className={`relative font-extrabold ${feature ? "mt-6 text-feature" : "mt-5 text-h3"}`}>
                     <span className="relative inline-block">
                       {s.title}
                       <svg
