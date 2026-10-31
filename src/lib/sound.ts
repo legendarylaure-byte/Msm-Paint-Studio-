@@ -23,7 +23,6 @@ export function isSoundEnabled(): boolean {
   if (typeof window === "undefined") return false;
   try {
     const val = localStorage.getItem("msm-sound");
-    // Default to on for better UX
     if (val === null) {
       localStorage.setItem("msm-sound", "on");
       return true;
@@ -40,7 +39,7 @@ export function setSoundEnabled(on: boolean) {
   } catch {}
 }
 
-/** Short tick on section change. */
+/** Soft brush stroke tick on section change. */
 export function playSectionTick() {
   if (!isSoundEnabled()) return;
   const ctx = getCtx();
@@ -49,60 +48,92 @@ export function playSectionTick() {
     if (ctx.state === "suspended") {
       ctx.resume();
     }
+    const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(600, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.08);
-    gain.gain.setValueAtTime(0.06, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-    osc.connect(gain);
+    const filter = ctx.createBiquadFilter();
+    
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(450, now);
+    osc.frequency.exponentialRampToValueAtTime(280, now + 0.12);
+    
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(800, now);
+    filter.frequency.exponentialRampToValueAtTime(400, now + 0.12);
+    
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.04, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(ctx.destination);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.08);
+    osc.start(now);
+    osc.stop(now + 0.12);
   } catch {}
 }
 
-/** Rising sweep on back-to-top click. */
+/** Soft whoosh on back-to-top click. */
 export function playBackToTop() {
   if (!isSoundEnabled()) return;
   const ctx = getCtx();
   if (!ctx) return;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(600, ctx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.1);
-  gain.gain.setValueAtTime(0.12, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(ctx.currentTime);
-  osc.stop(ctx.currentTime + 0.1);
+  try {
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(320, now);
+    osc.frequency.exponentialRampToValueAtTime(520, now + 0.15);
+    
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(600, now);
+    
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.05, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.15);
+  } catch {}
 }
 
-/** Very subtle tick on button hover. */
+/** Subtle soft click on button hover. */
 export function playHoverTick() {
   if (!isSoundEnabled()) return;
   const ctx = getCtx();
   if (!ctx) return;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = "sine";
-  osc.frequency.value = 1200;
-  gain.gain.setValueAtTime(0.03, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.02);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(ctx.currentTime);
-  osc.stop(ctx.currentTime + 0.02);
+  try {
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 900;
+    gain.gain.setValueAtTime(0.02, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.015);
+  } catch {}
 }
 
 export function vibrateSection() {
   if (typeof navigator === "undefined" || !("vibrate" in navigator)) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   try {
-    navigator.vibrate([8, 4, 6]);
+    navigator.vibrate([6, 3, 4]);
   } catch {}
 }
 
@@ -110,7 +141,7 @@ export function vibrateBackToTop() {
   if (typeof navigator === "undefined" || !("vibrate" in navigator)) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   try {
-    navigator.vibrate([12, 6, 12]);
+    navigator.vibrate([10, 4, 8]);
   } catch {}
 }
 
@@ -118,7 +149,7 @@ export function vibrateClick() {
   if (typeof navigator === "undefined" || !("vibrate" in navigator)) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   try {
-    navigator.vibrate([6, 3]);
+    navigator.vibrate([4, 2]);
   } catch {}
 }
 
@@ -126,6 +157,6 @@ export function vibratePaint() {
   if (typeof navigator === "undefined" || !("vibrate" in navigator)) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   try {
-    navigator.vibrate([10, 5, 8]);
+    navigator.vibrate([8, 3, 6]);
   } catch {}
 }
