@@ -85,7 +85,7 @@ const sections = [
 export default function TermsPage() {
   return (
     <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
-      <p className="eyebrow text-accent">
+      <p className="eyebrow text-brush-ink">
         Legal
       </p>
       <h1 className="mt-3 text-h1 font-extrabold">
@@ -116,10 +116,10 @@ export default function TermsPage() {
       </div>
 
       <div className="mt-8 flex flex-wrap gap-4 text-sm font-bold">
-        <Link href="/privacy" className="text-accent hover:underline">
+        <Link href="/privacy" className="text-brush-ink hover:underline">
           Privacy Policy →
         </Link>
-        <Link href="/accessibility" className="text-accent hover:underline">
+        <Link href="/accessibility" className="text-brush-ink hover:underline">
           Accessibility Statement →
         </Link>
         <Link href="/" className="text-ink-mute hover:underline">

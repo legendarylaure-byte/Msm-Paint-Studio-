@@ -15,7 +15,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
     hasMounted = true;
   }, []);
 
-  if (reduce || !showWipe) return <>{children}</>;
+  if (reduce || !showWipe) return <div className="min-h-screen">{children}</div>;
 
   return (
     <>

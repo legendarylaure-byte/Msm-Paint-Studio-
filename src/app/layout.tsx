@@ -2,12 +2,17 @@ import type { Metadata, Viewport } from "next";
 import {
   Bricolage_Grotesque,
   Manrope,
-  JetBrains_Mono,
+  Space_Mono,
 } from "next/font/google";
 import { site } from "@/lib/site";
+import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
+import { StickyCTA } from "@/components/layout/StickyCTA";
+import { AutoTheme } from "@/components/ui/AutoTheme";
+import { ToastProvider } from "@/components/ui/Toast";
+import { Analytics } from "@/components/ui/Analytics";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import { SectionIndicator } from "@/components/ui/SectionIndicator";
 import { SplashCursor } from "@/components/ui/SplashCursor";
@@ -26,9 +31,10 @@ const body = Manrope({
   display: "swap",
 });
 
-const mono = JetBrains_Mono({
+const mono = Space_Mono({
   variable: "--font-mono-family",
   subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -98,10 +104,12 @@ const jsonLd = {
   sameAs: [site.social.instagram, site.social.facebook],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || headersList.get("x-invoke-path") || "";
+  const isAdmin = pathname.startsWith("/admin");
+  
   return (
-    // suppressHydrationWarning: the inline script below sets data-theme on
-    // <html> before React hydrates, which would otherwise mismatch.
     <html
       lang="en-AU"
       suppressHydrationWarning
@@ -110,26 +118,51 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem("msm-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark")}}catch(e){}`,
+            __html: `try{if(localStorage.getItem("msm-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark")}}catch(e){}try{document.documentElement.style.setProperty("--brush-ink","color-mix(in srgb, #ff6b35 75%, #0f1026)");document.documentElement.classList.add("light-paint")}catch(e){}`,
           }}
         />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <a href="#main" className="skip-link rounded-full bg-night px-5 py-3 text-sm font-bold text-onnight">
-          Skip to content
-        </a>
-        <ScrollProgress />
-        <SplashCursor />
-        <BrushCursor />
-        <SectionIndicator />
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <MobileActionBar />
+        {isAdmin ? (
+          children
+        ) : (
+          <>
+            <a href="#main" className="skip-link rounded-full bg-night px-5 py-3 text-sm font-bold text-onnight">
+              Skip to content
+            </a>
+            <ScrollProgress />
+            <SplashCursor />
+            <BrushCursor />
+            <SectionIndicator />
+            <Header />
+            <ToastProvider>
+              <main id="main" className="flex-1">
+                {children}
+              </main>
+            </ToastProvider>
+            <Footer />
+            <MobileActionBar />
+            <StickyCTA />
+            <AutoTheme />
+            <Analytics />
+            <link rel="manifest" href="/manifest.json" />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                      console.log('Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                      console.error('Service Worker registration failed:', error);
+                    });
+                }`,
+              }}
+            />
+          </>
+        )}
       </body>
     </html>
   );

@@ -20,6 +20,8 @@ export function FAQ() {
               accent="ask us"
               intro="Straight answers on price, timing and what to expect. Anything else — just open the chat."
               align="left"
+                  brushWords={3}
+          followPaint
             />
           </div>
 
@@ -38,7 +40,7 @@ export function FAQ() {
                         type="button"
                         onClick={() => setOpen(isOpen ? null : i)}
                         aria-expanded={isOpen}
-                        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                        className="flex w-full items-center justify-between gap-4 rounded-[18px] px-6 py-5 text-left transition-colors hover:bg-surface-2/40 active:bg-surface-2"
                       >
                         <span className="text-h3 font-extrabold text-ink">
                           {f.q}

@@ -37,7 +37,7 @@ const commitments = [
 export default function AccessibilityPage() {
   return (
     <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
-      <p className="eyebrow text-accent">
+      <p className="eyebrow text-brush-ink">
         Legal
       </p>
       <h1 className="mt-3 text-h1 font-extrabold">
@@ -81,7 +81,7 @@ export default function AccessibilityPage() {
           <p className="mt-3 leading-relaxed text-ink-soft">
             If any part of this site is hard to use, tell us and we&apos;ll fix
             it and offer the information another way. Email{" "}
-            <a href={`mailto:${site.email}`} className="font-bold text-accent hover:underline">
+            <a href={`mailto:${site.email}`} className="font-bold text-brush-ink hover:underline">
               {site.email}
             </a>{" "}
             or call {site.phone}. We aim to respond within two business days.
@@ -90,10 +90,10 @@ export default function AccessibilityPage() {
       </div>
 
       <div className="mt-8 flex flex-wrap gap-4 text-sm font-bold">
-        <Link href="/privacy" className="text-accent hover:underline">
+        <Link href="/privacy" className="text-brush-ink hover:underline">
           Privacy Policy →
         </Link>
-        <Link href="/terms" className="text-accent hover:underline">
+        <Link href="/terms" className="text-brush-ink hover:underline">
           Terms &amp; Conditions →
         </Link>
         <Link href="/" className="text-ink-mute hover:underline">

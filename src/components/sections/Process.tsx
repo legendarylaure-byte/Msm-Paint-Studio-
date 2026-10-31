@@ -21,9 +21,11 @@ export function Process() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="How it works"
-          title="Four easy steps to a"
-          accent="fresh home"
+          title="Four easy steps"
+          accent="to a fresh home"
           intro="No jargon, no pressure. Here's exactly what happens from the moment you get in touch."
+          brushWords={3}
+          followPaint
         />
 
         <div className="relative mt-16">
@@ -46,7 +48,7 @@ export function Process() {
                 <li key={s.step} className="relative pl-20 sm:grid sm:grid-cols-2 sm:gap-16 sm:pl-0">
                   {/* node */}
                   <span
-                    className="absolute left-0 top-1 z-10 grid h-14 w-14 place-items-center rounded-2xl border-[5px] border-surface bg-ink font-display text-lg font-extrabold text-surface shadow-lg sm:left-1/2 sm:-translate-x-1/2"
+                    className="absolute left-0 top-1 z-10 grid h-14 w-14 place-items-center rounded-2xl border-[5px] border-surface bg-brush-paint font-display text-lg font-extrabold text-onbrand shadow-lg sm:left-1/2 sm:-translate-x-1/2"
                   >
                     {s.step}
                   </span>
@@ -56,9 +58,9 @@ export function Process() {
                     className={`${right ? "sm:col-start-2 sm:pl-4" : "sm:col-start-1 sm:text-right sm:pr-4"}`}
                   >
                     <div
-                      className={`card-lift rounded-[20px] border border-line bg-card p-7 ${
+                      className={`card-lift rounded-[20px] border border-white/40 bg-white/60 p-7 shadow-[0_20px_60px_-30px_rgba(15,16,38,0.5)] backdrop-blur-xl ${
                         right ? "" : "sm:ml-auto"
-                      } max-w-md`}
+                      } max-w-md dark:border-white/10 dark:bg-white/5`}
                     >
                       <h3 className="text-h3 font-extrabold">{s.title}</h3>
                       <p className="mt-2 text-base leading-relaxed text-ink-soft">

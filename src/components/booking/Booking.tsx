@@ -12,11 +12,15 @@ import {
   Building2,
   Fence,
   Sofa,
+  Paintbrush,
+  X,
 } from "lucide-react";
 import { services, site } from "@/lib/site";
 import { palette } from "@/lib/paint";
 import { useTodayISO } from "@/lib/use-today";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
+import { useToast } from "@/components/ui/Toast";
+import { PaintCoverageCalculator } from "./PaintCoverageCalculator";
 
 type BookingData = {
   service: string;
@@ -48,10 +52,11 @@ const slots = [
 const steps = ["Job", "When", "About you"];
 
 const input =
-  "w-full rounded-xl border border-line bg-card px-4 py-3.5 text-base text-ink placeholder:text-ink-mute transition-colors focus:border-tangerine focus:outline-none";
+  "w-full rounded-xl border border-line bg-card px-4 py-3.5 text-base text-ink placeholder:text-ink-mute transition-colors focus:border-brush-paint focus:outline-none";
 
 export function Booking() {
   const reduce = useReducedMotionSafe();
+  const { toast } = useToast();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<BookingData>({
     service: "",
@@ -79,8 +84,29 @@ export function Booking() {
   }, []);
   const paintName = palette.find((c) => c.hex === paint)?.name ?? null;
 
+  // Smart form auto-fill from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("msm-booking-draft");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setData((d) => ({ ...d, ...parsed }));
+      }
+    } catch {}
+  }, []);
+
+  // Save draft on change
+  useEffect(() => {
+    try {
+      localStorage.setItem("msm-booking-draft", JSON.stringify(data));
+    } catch {}
+  }, [data]);
+
   const set = <K extends keyof BookingData>(k: K, v: BookingData[K]) =>
     setData((d) => ({ ...d, [k]: v }));
+
+  // Paint coverage calculator modal
+  const [calculatorStep, setCalculatorStep] = useState(false);
 
   // Client-only so the page stays statically prerenderable.
   const minDate = useTodayISO();
@@ -127,9 +153,11 @@ export function Booking() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "Something went wrong");
       setStatus("done");
+      toast("Booking received! Check your email for confirmation.", "success");
     } catch (e) {
       setStatus("error");
       setError(e instanceof Error ? e.message : "Something went wrong");
+      toast("Something went wrong. Please try again.", "error");
     }
   }
 
@@ -177,7 +205,7 @@ export function Booking() {
             <div className="flex flex-col items-center gap-1.5">
               <span
                 className={`grid h-9 w-9 place-items-center rounded-full font-display text-sm font-extrabold transition-colors ${
-                  i <= step ? "bg-tangerine text-onbrand" : "bg-surface-2 text-ink-soft"
+                  i <= step ? "bg-brush-paint text-onbrand" : "bg-surface-2 text-ink-soft"
                 }`}
               >
                 {i < step ? "✓" : i + 1}
@@ -193,7 +221,7 @@ export function Booking() {
             {i < steps.length - 1 && (
               <div className="relative -mt-5 h-[5px] flex-1 overflow-hidden rounded-full bg-line">
                 <div
-                  className="paint-fill absolute inset-y-0 left-0 bg-gradient-to-r from-tangerine to-tangerine-dark transition-all duration-500"
+                  className="paint-fill absolute inset-y-0 left-0 bg-gradient-to-r from-brush-paint to-brush-paint transition-all duration-500"
                   style={{ width: i < step ? "100%" : "0%" }}
                 />
               </div>
@@ -241,6 +269,17 @@ export function Booking() {
                       </Chip>
                     ))}
                   </div>
+                </Group>
+
+                <Group label="Tools & calculators">
+                  <button
+                    type="button"
+                    onClick={() => setCalculatorStep(true)}
+                    className="btn btn-ghost group flex items-center gap-2 rounded-full border border-dashed border-line px-4 py-3 text-sm font-medium text-ink-soft transition-all hover:border-brush-paint hover:bg-brush-paint/5 hover:text-brush-paint"
+                  >
+                    <Paintbrush className="h-4 w-4" />
+                    Calculate paint coverage
+                  </button>
                 </Group>
 
                 <Field label="Tell us about the space (optional)">
@@ -328,19 +367,42 @@ export function Booking() {
                   </Field>
                 </div>
 
-                {paintName && (
-                  <div className="flex items-center gap-3 rounded-xl bg-surface-2 px-4 py-3 text-sm font-semibold text-ink-soft">
-                    <span
-                      aria-hidden
-                      className="h-4 w-4 shrink-0 rounded-full border border-line"
-                      style={{ background: paint ?? undefined }}
-                    />
-                    Your quote includes{" "}
-                    <strong className="font-bold text-ink">{paintName}</strong> walls
+                <div className="rounded-xl bg-surface-2 px-4 py-3 text-sm font-semibold text-ink-soft">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="text-ink">Your quote includes</span>
                   </div>
-                )}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {palette.slice(0, 8).map((c) => (
+                      <button
+                        key={c.hex}
+                        type="button"
+                        onClick={() => {
+                          setPaint(c.hex);
+                          window.dispatchEvent(new CustomEvent('brush:paint', { detail: c.hex }));
+                        }}
+                        className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 transition-all ${
+                          paint === c.hex 
+                            ? 'bg-brush-paint/20 ring-2 ring-brush-paint' 
+                            : 'bg-card hover:bg-brush-paint/10'
+                        }`}
+                        title={c.name}
+                      >
+                        <span
+                          className="h-3 w-3 rounded-full border border-line"
+                          style={{ background: c.hex }}
+                        />
+                        <span className="text-xs font-bold text-ink">{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                  {paintName && (
+                    <p className="mt-2 text-xs text-ink-mute">
+                      Selected: <span className="font-semibold text-ink">{paintName}</span> walls
+                    </p>
+                  )}
+                </div>
 
-                <div className="rounded-xl bg-tangerine/10 px-4 py-3 text-sm font-semibold text-ink">
+                <div className="rounded-xl bg-brush-paint/10 px-4 py-3 text-sm font-semibold text-ink">
                   <strong>Review:</strong> {data.service} · {data.property} ·{" "}
                   {data.date} · {data.slot}
                 </div>
@@ -374,22 +436,34 @@ export function Booking() {
           </button>
 
           {step < 2 ? (
-            <button
-              type="button"
-              onClick={() => setStep((s) => s + 1)}
-              disabled={!stepValid()}
-              className="btn btn-primary group"
-            >
+            <>
+              {!stepValid() && step === 0 && (
+                <p className="text-xs font-medium text-berry-dark" role="alert">
+                  Select a service and property type to continue.
+                </p>
+              )}
+              {!stepValid() && step === 1 && (
+                <p className="text-xs font-medium text-berry-dark" role="alert">
+                  Choose a date and time slot to continue.
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => setStep((s) => s + 1)}
+                disabled={!stepValid()}
+                className="btn btn-brush group"
+              >
               <span className="relative z-10 flex items-center gap-2">
-                Continue <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                Continue <ArrowRight className="h-4 w-4 text-inherit transition-transform group-hover:translate-x-1" />
               </span>
             </button>
+            </>
           ) : (
             <button
               type="button"
               onClick={submit}
               disabled={status === "sending" || !stepValid()}
-              className="btn btn-primary gloss group"
+              className="btn btn-brush gloss group"
             >
               <span className="relative z-10 flex items-center gap-2">
                 {status === "sending" ? (
@@ -403,6 +477,23 @@ export function Booking() {
             </button>
           )}
         </div>
+
+        {/* Paint Coverage Calculator Modal */}
+        {calculatorStep && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+            <div className="relative w-full max-w-2xl rounded-2xl bg-surface shadow-xl">
+              <button
+                onClick={() => setCalculatorStep(false)}
+                className="absolute right-4 top-4 rounded-full p-2 text-ink-mute hover:text-ink transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <div className="p-6">
+                <PaintCoverageCalculator />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -420,7 +511,7 @@ function Field({
   return (
     <label className="block">
       <span className="mb-2 flex items-center gap-1.5 text-sm font-extrabold text-ink">
-        {Icon && <Icon className="h-4 w-4 text-accent" />}
+        {Icon && <Icon className="h-4 w-4 text-brush-ink" />}
         {label}
       </span>
       {children}
@@ -469,7 +560,7 @@ function Chip({
         full ? "w-full justify-center" : ""
       } ${
         active
-          ? "border-tangerine bg-tangerine text-onbrand shadow-[0_10px_22px_-12px_rgba(255,107,53,1)]"
+          ? "border-brush-paint bg-brush-paint text-onbrand shadow-[0_10px_22px_-12px_color-mix(in_srgb,var(--brush-paint)_80%,transparent)]"
           : "border-line bg-card text-ink-soft hover:border-edge/25 hover:text-ink"
       }`}
     >

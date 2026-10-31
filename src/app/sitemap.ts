@@ -2,13 +2,11 @@ import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // fixed dates: `new Date()` is not allowed at prerender under cache components
-  const lastModified = "2026-10-20";
-
+  const base = site.url;
   return [
-    { url: site.url, lastModified, changeFrequency: "monthly", priority: 1 },
-    { url: `${site.url}/privacy`, lastModified, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${site.url}/terms`, lastModified, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${site.url}/accessibility`, lastModified, changeFrequency: "yearly", priority: 0.3 },
+    { url: base, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
+    { url: `${base}/privacy`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.3 },
+    { url: `${base}/terms`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.3 },
+    { url: `${base}/accessibility`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.3 },
   ];
 }

@@ -1,38 +1,24 @@
+import Image from "next/image";
 import { Reveal, WordReveal } from "@/components/ui/Reveal";
 
-/** A painted surface, not a stock photo — swap for a real portrait when one exists. */
 function PaintCard() {
   return (
-    <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] border border-line bg-surface-2 panel-shadow">
-      {/* base coat */}
-      <div className="absolute inset-0 bg-[linear-gradient(160deg,#E3D2B8_0%,#B8C2AE_52%,#8CA3B8_100%)] dark:bg-[linear-gradient(160deg,#4a3a2c_0%,#33402f_52%,#2b3a4a_100%)]" />
-
-      {/* wet paint blending in */}
-      <div className="absolute -left-10 top-6 h-56 w-56 rounded-full bg-[#C4674B] opacity-50 blur-3xl mix-blend-multiply animate-drift dark:opacity-40" />
-      <div
-        className="absolute -right-8 top-1/3 h-64 w-64 rounded-full bg-[#7E8A6B] opacity-45 blur-3xl mix-blend-multiply animate-drift dark:opacity-35"
-        style={{ animationDelay: "-4s", animationDuration: "16s" }}
+    <div className="group relative aspect-[4/5] overflow-hidden rounded-[28px] border border-white/40 bg-white/60 shadow-[0_40px_90px_-50px_rgba(15,16,38,0.9)] backdrop-blur-xl transition-transform duration-700 hover:scale-[1.01] dark:border-white/10 dark:bg-white/5">
+      <Image
+        src="/team/mesay-owner.jpg"
+        alt="Owner of MSM Painting Studio - hands-on painting professional"
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="object-cover object-top transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
+        priority={false}
       />
-      <div
-        className="absolute -bottom-12 left-1/4 h-56 w-72 rounded-full bg-[#8CA3B8] opacity-45 blur-3xl mix-blend-multiply animate-drift dark:opacity-35"
-        style={{ animationDelay: "-8s", animationDuration: "19s" }}
+      <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_10%,transparent_40%,rgba(15,16,38,0.25)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+      <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -left-16 top-1/3 h-40 w-40 rounded-full bg-brush-paint/25 blur-[90px] opacity-0 transition-opacity duration-700 group-hover:opacity-70"
       />
-
-      {/* roller sweep */}
-      <div className="absolute inset-y-0 left-0 w-full overflow-hidden">
-        <div className="animate-sweep h-full w-1/3 -skew-x-12 bg-white/25 blur-xl" />
-      </div>
-
-      {/* grain + vignette so it reads as a surface, not a gradient */}
-      <div
-        className="absolute inset-0 opacity-[0.14] mix-blend-soft-light"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E\")",
-          backgroundSize: "140px 140px",
-        }}
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_10%,transparent_40%,rgba(15,16,38,0.3)_100%)]" />
 
       <div className="absolute inset-x-5 bottom-5">
         <p className="eyebrow text-white/80">In the studio</p>
@@ -54,11 +40,11 @@ export function MeetPainter() {
             <div className="relative mx-auto max-w-md">
               <PaintCard />
 
-              <div className="glass-strong absolute -bottom-5 -right-3 rounded-[20px] px-5 py-4 shadow-2xl sm:-right-6">
-                <p className="font-display text-xl font-extrabold text-brush-ink">
+              <div className="glass-strong absolute -bottom-5 -right-3 rounded-[20px] px-5 py-4 shadow-[0_30px_70px_-30px_rgba(15,16,38,0.9)] sm:-right-6 bg-white/90 dark:bg-black/70 backdrop-blur-xl border border-white/60 dark:border-white/15">
+                <p className="font-display text-xl font-extrabold text-brush-paint dark:text-brush-paint">
                   Owner on every job
                 </p>
-                <p className="mt-1 text-xs font-bold uppercase tracking-wider text-ink-mute">
+                <p className="mt-1 text-xs font-bold uppercase tracking-wider text-ink dark:text-white/80">
                   A trusted crew behind him
                 </p>
               </div>
@@ -67,11 +53,10 @@ export function MeetPainter() {
 
           <div>
             <Reveal>
-              <p className="eyebrow text-brush-ink">Meet the owner</p>
+              <p className="eyebrow text-brush-ink-dark">Meet the owner</p>
             </Reveal>
-            <h2 className="mt-3 text-h2 font-extrabold text-balance">
-              <WordReveal text="You get the craftsman, not a" accent="call centre" />
-              <span className="gradient-text">.</span>
+            <h2 className="relative mt-3 text-h2 font-extrabold text-balance w-fit max-w-full">
+              <WordReveal text="You get the" accent="craftsman, not a call centre." brushWords={3} />
             </h2>
             <Reveal delay={0.12}>
               <div className="mt-5 space-y-4 text-lg leading-relaxed text-ink-soft">

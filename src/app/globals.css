@@ -9,9 +9,9 @@
    Surface/text/border flip; brand colours stay fixed.
 ———————————————————————————————————————————————— */
 :root {
-  --surface: #f8f9fc;
+  --surface: #f0f2f8;
   /* cool slate band for visual separation */
-  --surface-2: #f0f3fa;
+  --surface-2: #e8ecf5;
   --card: #ffffff;
   --ink: #0f1026;
   --ink-soft: #3a3f5c;
@@ -31,7 +31,10 @@
   --brush-paint: #ff6b35;
   /* fallback for browsers without relative colour; the @supports block below
      replaces this with a richer oklch version */
-  --brush-ink: color-mix(in srgb, var(--brush-paint) 68%, var(--ink));
+  --brush-ink: color-mix(in srgb, var(--brush-paint) 75%, var(--ink));
+  --brush-btn-ink: #0f1026;
+  /* dark-theme variant: lighter mix so light paints stay visible on dark */
+  --brush-ink-dark: color-mix(in srgb, var(--brush-paint) 50%, #ffffff);
   color-scheme: light;
 }
 
@@ -49,20 +52,17 @@
   --blob: 0.14;
   --scrim: 43 26 82;
   --accent: #ff8a5c;
-  --brush-ink: color-mix(in srgb, var(--brush-paint) 55%, #ffffff);
+  --brush-ink: color-mix(in srgb, var(--brush-paint) 25%, #ffffff);
+  --brush-ink-dark: color-mix(in srgb, var(--brush-paint) 50%, #ffffff);
+  --brush-btn-ink: #f8fafc;
   color-scheme: dark;
 }
 
-/* Mixing a pale wall colour (Warm Sand, Chalk) with ink lands on grey taupe.
-   Keep the picked hue instead and force a chroma that shows on both themes. */
-@supports (color: oklch(from red 0.5 0.1 h)) {
-  :root {
-    --brush-ink: oklch(from var(--brush-paint) 0.62 0.085 h);
-  }
-  [data-theme="dark"] {
-    --brush-ink: oklch(from var(--brush-paint) 0.8 0.075 h);
-  }
-}
+/* NOTE: oklch(from ...) relative color syntax does not resolve CSS variables
+   correctly in @supports blocks (produces wrong dark colors). Using color-mix
+   fallback exclusively. JS readableInk() in paint.ts is the authoritative
+   source and sets --brush-ink on mount. */
+
 
 @theme inline {
   /* themed */
@@ -80,6 +80,8 @@
   /* the picked swatch, made readable — use this for any accent that must
      follow the hero colour instead of hardcoding tangerine */
   --color-brush-ink: var(--brush-ink);
+  --color-brush-ink-dark: var(--brush-ink-dark);
+  --color-brush-paint: var(--brush-paint);
 
   /* Bricolage for display voice, Manrope for reading, mono for labels */
   --font-display: var(--font-display-family), ui-sans-serif, system-ui, sans-serif;
@@ -151,6 +153,22 @@
   to {
     transform: translateX(130%);
   }
+}
+
+/* Mobile menu slide-in animation */
+@keyframes slideInMobile {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInMobile 0.3s ease-out forwards;
 }
 
 html {
@@ -297,10 +315,39 @@ p {
 
 /* the one accent, two-stop — tangerine, never a rainbow */
 .gradient-text {
-  background: linear-gradient(100deg, var(--accent) 0%, var(--color-tangerine-dark) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--brush-ink) !important;
+  background: color-mix(in srgb, var(--brush-paint) 30%, transparent) !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  padding: 0.05em 0.2em;
+  border-radius: 0.3em;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+  animation: text-breathe 3s ease-in-out infinite;
+}
+.gradient-text::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--brush-paint) 30%, transparent);
+  border-radius: 0.3em;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: pill-in 0.6s var(--ease-brush) 0.3s both;
+}
+@supports (animation-timeline: view()) {
+  .gradient-text::before {
+    animation: pill-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+
+/* ensure gradient-text is readable in dark theme too */
+[data-theme="dark"] .gradient-text {
+  color: var(--brush-ink-dark) !important;
 }
 
 /* one eyebrow treatment everywhere */
@@ -320,12 +367,13 @@ p {
   position: absolute;
   left: -6%;
   right: -14%;
-  bottom: -0.16em;
-  height: 0.17em;
+  bottom: -0.22em;
+  height: 0.24em;
   min-width: 1.4em;
   transform-origin: left center;
   pointer-events: none;
-  color: var(--brush-ink);
+  color: var(--brush-paint);
+  border-radius: 2px;
 }
 .paint-underline svg {
   display: block;
@@ -350,6 +398,20 @@ p {
 /* always-dark panels need the swatch pushed toward white, not ink */
 .paint-underline-light {
   color: color-mix(in srgb, var(--brush-paint) 58%, #ffffff);
+}
+
+/* full-width underline for full sentence */
+.paint-underline-full {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.22em;
+  height: 0.24em;
+  transform-origin: left center;
+  pointer-events: none;
+  color: var(--brush-paint);
+  min-width: auto;
+  border-radius: 2px;
 }
 
 /* ————————————————————————————————————————————————
@@ -723,6 +785,88 @@ p {
 }
 
 /* ————————————————————————————————————————————————
+   SERVICE CARD ANIMATIONS — bright hover effects
+——————————————————————————————————————————————— */
+.service-card-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--wash) 34%, var(--surface)) 0%, color-mix(in srgb, var(--wash) 18%, var(--surface)) 50%, var(--surface) 100%);
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-brush), transform 0.7s var(--ease-brush);
+  transform: translate3d(6%, -4%, 0);
+  z-index: 1;
+}
+.service-card:hover .service-card-bg {
+  opacity: 0.7;
+  transform: translate3d(0, 0, 0);
+}
+
+.service-card-glow {
+  position: absolute;
+  inset: -30% -30% auto auto;
+  width: 55%;
+  height: 55%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--wash) 42%, transparent) 0%, transparent 70%);
+  filter: blur(55px);
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-brush), transform 0.7s var(--ease-brush);
+  transform: translate3d(20%, -20%, 0);
+  z-index: 1;
+}
+.service-card:hover .service-card-glow {
+  opacity: 0.85;
+  transform: translate3d(10%, -10%, 0);
+}
+
+.service-card-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(120deg, transparent 0%, color-mix(in srgb, var(--wash) 28%, transparent) 42%, transparent 100%);
+  transform: translateX(-120%);
+  transition: transform 1.1s var(--ease-brush);
+  pointer-events: none;
+  z-index: 2;
+}
+.service-card:hover .service-card-sheen {
+  transform: translateX(120%);
+}
+
+.service-card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from 0deg, transparent 0deg, color-mix(in srgb, var(--wash) 85%, transparent) 150deg, transparent 280deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-brush);
+  animation: service-border-rotate 7s linear infinite;
+  z-index: 1;
+}
+.service-card:hover .service-card-border {
+  opacity: 0.9;
+}
+
+@keyframes service-border-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* dark theme: brighter glows */
+[data-theme="dark"] .service-card-bg {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--wash) 46%, var(--card)) 0%, color-mix(in srgb, var(--wash) 28%, var(--card)) 50%, var(--card) 100%);
+}
+[data-theme="dark"] .service-card-glow {
+  background: radial-gradient(circle, color-mix(in srgb, var(--wash) 58%, transparent) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* ————————————————————————————————————————————————
    SCROLL-DRIVEN SECTION TRANSITIONS
    Native `animation-timeline: view()` — scrub off the main thread,
    no scroll listeners. Browsers without it simply show the settled state.
@@ -780,7 +924,7 @@ p {
   --room-sky-a: #cfe0e8;
   --room-sky-b: #eef2e9;
   --room-shadow: 0.32;
-  --room-wall-dim: rgba(0, 0, 0, 0);
+  --room-wall-dim: rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="dark"] .stage {
@@ -1017,3 +1161,306 @@ html.has-brush [contenteditable="true"] {
     clip-path: none !important;
   }
 }
+
+
+/* Text breathing: subtle scale pulse on accent words */
+@keyframes text-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* Pill entrance: colored background scales in from left */
+@keyframes pill-in {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+
+/* Combined entrance + breathing for accent words (higher specificity than .rise-word) */
+.rise-word.gradient-text,
+.rise-word.brush-word {
+  animation: rise-word 0.62s var(--ease-brush) both, text-breathe 3s ease-in-out 1s infinite;
+  animation-delay: calc(var(--i, 0) * 55ms + 80ms), 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-text, .brush-word {
+    animation: none !important;
+  }
+  .gradient-text::before, .brush-word::before {
+    transform: scaleX(1) !important;
+    animation: none !important;
+  }
+}
+
+
+/* Accent text on dark panels (QuoteCTA, WhyMSM) must use lightened brush color */
+[class*="bg-night"] .gradient-text,
+[class*="bg-night"] .brush-word {
+  color: color-mix(in srgb, var(--brush-paint) 60%, #ffffff) !important;
+}
+/* Dark panel hover text */
+[class*="bg-night"] .hover\:text-brush-ink:hover {
+  color: color-mix(in srgb, var(--brush-paint) 60%, #ffffff) !important;
+}
+
+
+/* ————————————————————————————————————————————————
+   BACK-TO-TOP 3D BUTTON
+ ———————————————————————————————————————————————— */
+.btn-back-to-top {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1rem;
+  background: var(--brush-paint);
+  color: var(--brush-btn-ink);
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 4px 0 0 color-mix(in srgb, var(--brush-paint) 70%, #000000),
+    0 8px 20px -4px color-mix(in srgb, var(--brush-paint) 40%, transparent);
+  transition:
+    transform 0.15s var(--ease-brush),
+    box-shadow 0.15s var(--ease-brush),
+    opacity 0.3s var(--ease-brush);
+}
+.btn-back-to-top:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0 0 color-mix(in srgb, var(--brush-paint) 70%, #000000),
+    0 12px 24px -4px color-mix(in srgb, var(--brush-paint) 50%, transparent);
+}
+.btn-back-to-top:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 0 0 color-mix(in srgb, var(--brush-paint) 70%, #000000),
+    0 4px 12px -4px color-mix(in srgb, var(--brush-paint) 30%, transparent);
+}
+.btn-back-to-top .lucide,
+.btn-back-to-top svg {
+  transition: transform 0.2s var(--ease-brush);
+}
+.btn-back-to-top:hover svg {
+  transform: translateY(-2px);
+}
+
+
+/* ————————————————————————————————————————————————
+   PAINT SWATCHES — visibility on light backgrounds
+ ———————————————————————————————————————————————— */
+.swatch-btn {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s var(--ease-brush), box-shadow 0.2s var(--ease-brush);
+}
+.swatch-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.12);
+}
+.swatch-btn.swatch-selected {
+  box-shadow:
+    0 0 0 3px var(--brush-paint),
+    0 0 0 5px rgba(255, 255, 255, 0.9),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.1);
+}
+/* Light paints get extra border definition */
+.swatch-light {
+  border: 2px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ————————————————————————————————————————————————
+   /* ———————————————————————————————————————————————
+   GALLERY MARQUEE — infinite scroll
+———————————————————————————————————————————————————— */
+.gallery-marquee {
+  position: relative;
+  overflow: hidden;
+}
+.gallery-marquee-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  pointer-events: none;
+  z-index: 10;
+}
+.gallery-marquee-fade-left {
+  left: 0;
+  background: linear-gradient(to right, var(--surface), transparent);
+}
+.gallery-marquee-fade-right {
+  right: 0;
+  background: linear-gradient(to left, var(--surface), transparent);
+}
+[data-theme="dark"] .gallery-marquee-fade-left {
+  background: linear-gradient(to right, var(--surface), transparent);
+}
+[data-theme="dark"] .gallery-marquee-fade-right {
+  background: linear-gradient(to left, var(--surface), transparent);
+}
+.gallery-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: gallery-marquee-scroll 60s linear infinite;
+}
+.gallery-marquee:hover .gallery-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-marquee-track {
+    animation: none;
+  }
+}
+.gallery-marquee-item {
+  flex-shrink: 0;
+  min-width: 280px;
+  margin-right: 20px;
+  opacity: 1 !important;
+  cursor: zoom-in;
+}
+@keyframes gallery-marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* —————————————————————————————————————————————————————————————
+   BRUSH-COLORED BUTTONS — header follows paint selectionBRUSH-COLORED BUTTONS — header follows paint selection
+———————————————————————————————————————————————— */
+.brush-word {
+  color: var(--brush-ink) !important;
+  background: color-mix(in srgb, var(--brush-paint) 30%, transparent) !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  padding: 0.05em 0.2em;
+  border-radius: 0.3em;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+  animation: text-breathe 3s ease-in-out infinite;
+}
+.brush-word::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--brush-paint) 30%, transparent);
+  border-radius: 0.3em;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: pill-in 0.6s var(--ease-brush) 0.3s both;
+}
+@supports (animation-timeline: view()) {
+  .brush-word::before {
+    animation: pill-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+
+/* Full-sentence heading that follows the selected paint color.
+   Uses readable ink (darkened in light theme, lightened in dark theme) so
+   very light paints (Chalk, Warm Sand, Ivory) stay legible on light bg. */
+.heading-brush {
+  color: var(--brush-ink) !important;
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 60%, transparent);
+}
+[data-theme="dark"] .heading-brush {
+  color: var(--brush-ink-dark) !important;
+  text-shadow: none;
+}
+
+/* Subtle dark shadow lift for ultra-light paints on light backgrounds. */
+@supports (color: oklch(from red 0.5 0.1 h)) {
+  :root .heading-brush {
+    text-shadow: 0 1px 2px color-mix(in srgb, #0f1026 12%, transparent);
+  }
+}
+
+/* brush-word text color must be readable: dark on light surfaces, light on dark */
+[data-theme="dark"] .brush-word {
+  color: var(--brush-ink-dark) !important;
+}
+
+/* ensure paint underline is readable in both themes */
+[data-theme="dark"] .paint-underline,
+[data-theme="dark"] .paint-underline-full {
+  color: var(--brush-ink-dark) !important;
+}
+
+/* paint-underline-light for dark panels */
+.paint-underline-light {
+  color: color-mix(in srgb, var(--brush-paint) 58%, #ffffff);
+}
+
+[data-theme="dark"] .paint-underline-light {
+  color: color-mix(in srgb, var(--brush-paint) 58%, var(--onnight)) !important;
+}
+
+/* hover — underline thickness grows on heading hover */
+h2:hover .paint-underline,
+h2:hover .paint-underline-full {
+  height: 0.24em;
+  bottom: -0.2em;
+  transform: scaleY(1.25);
+}
+
+.btn-brush {
+  background-color: var(--brush-paint) !important;
+  border-color: var(--brush-ink) !important;
+  padding: 0.95rem 2rem;
+  box-shadow: 0 18px 40px -18px color-mix(in srgb, var(--brush-paint) 95%, transparent);
+}
+
+/* Class-based button text color (set on <html> by paint luminance) */
+.light-paint .btn-brush,
+.light-paint .btn-brush svg,
+.light-paint .btn-brush .lucide {
+  color: #0f1026 !important;
+  stroke: currentColor !important;
+}
+
+.dark-paint .btn-brush,
+.dark-paint .btn-brush svg,
+.dark-paint .btn-brush .lucide {
+  color: #f8fafc !important;
+  stroke: currentColor !important;
+}
+
+/* Social icon hover text color */
+.light-paint .social-icon:hover {
+  color: #0f1026 !important;
+}
+.dark-paint .social-icon:hover {
+  color: #f8fafc !important;
+}
+
+/* Ensure icons inside brush buttons inherit button text color */
+.btn-brush svg,
+.btn-brush .lucide {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
+
+.btn-brush:hover {
+  background-color: color-mix(in srgb, var(--brush-paint) 85%, #000000) !important;
+  border-color: var(--brush-ink) !important;
+}
+
+/* apply to header's top-right buttons when paint color is selected */
+header .btn-brush,
+header .btn-brush:hover {
+  box-shadow: 0 4px 14px -6px color-mix(in srgb, var(--brush-paint) 50%, transparent) !important;
+}
+
+/* keep primary ghost/invert working — add brush overrides if needed */
+header .btn-ghost,
+header .btn-ghost-invert {
+  /* existing styles preserved */
+}
+

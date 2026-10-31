@@ -12,9 +12,11 @@ export function Testimonials() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Happy clients"
-          title="The kind of words that"
-          accent="make our day"
+          title="The kind of words"
+          accent="that make our day"
           align="left"
+          brushWords={3}
+          followPaint
         />
 
         {/* one voice, at full size — no cards, no equal-weight grid */}

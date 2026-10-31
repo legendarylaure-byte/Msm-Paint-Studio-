@@ -10,3 +10,7 @@ next-env.d.ts
 
 # local playwright screenshots
 .playwright-mcp/
+data/
+node_modules
+test_*.js
+window

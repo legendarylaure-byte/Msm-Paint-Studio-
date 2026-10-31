@@ -38,7 +38,7 @@ export default function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
-      className="glass relative grid h-10 w-10 place-items-center rounded-full text-ink transition-transform hover:scale-105 active:scale-95"
+      className="relative grid h-10 w-10 place-items-center rounded-full border border-white/40 bg-white/70 text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,0,0,0.08),0_4px_12px_-6px_rgba(15,16,38,0.6)] backdrop-blur-lg transition-all hover:scale-105 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.95),inset_0_-1px_0_rgba(0,0,0,0.1),0_6px_16px_-6px_rgba(15,16,38,0.7)] active:scale-95 active:shadow-[inset_0_2px_3px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] dark:border-white/15 dark:bg-white/10 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_4px_12px_-6px_rgba(0,0,0,0.8)]"
     >
       {/* sun */}
       <svg

@@ -16,100 +16,75 @@ import { Reveal, SectionHeading } from "@/components/ui/Reveal";
 
 const icons: Record<string, LucideIcon> = { Sofa, Home, Building2, Fence, Palette, Hammer };
 
-/* Mid-tone swatches only — Chalk and Warm Sand are invisible on a white card. */
+// Bright distinctive paint colors for each card - vibrant for both light & dark themes
 const cardPaints = [
-  palette[4].hex,
-  palette[2].hex,
-  palette[6].hex,
-  palette[3].hex,
-  palette[5].hex,
-  palette[7].hex,
+  "#9FFDD8",   // Interior Painting - Aqua Mint
+  "#DBEBA9",   // Exterior Painting - Pastel Light Green
+  "#FFA1C9",   // Fences & Gates - Soft Neon Pink
+  "#FDB788",   // Colour Advice - Soft Vibrant Orange/Peach
+  "#F1D37F",   // Shops & Warehouses - Butter Yellow
+  "#8CFAD8",   // Repairs & Prep - Light Green-Teal
 ];
 
-// Each card hovers in its own palette colour — no second accent needed.
 export function Services() {
   return (
-    <section id="services" className="scroll-mt-24 py-20 sm:py-28">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+    <section id="services" className="scroll-mt-28 py-14 sm:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6">
         <SectionHeading
           eyebrow="What we paint"
-          title="Every surface, inside and"
-          accent="out"
+          title="Every surface,"
+          accent="inside and out"
           intro="From a single bedroom to a full warehouse, the prep is the same obsession: clean, protect, prime, then lay on colour that lasts."
+          brushWords={3}
+          followPaint
         />
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-12">
+        <div className="mt-9 grid auto-rows-fr gap-3 sm:grid-cols-2 lg:grid-cols-12">
           {services.map((s, i) => {
             const Icon = icons[s.icon] ?? Home;
             const paint = cardPaints[i % cardPaints.length];
-            const feature = i === 0;
-            /* 7+5 then 6,6,6,6 — the eye lands on the first card, not on a wall of equals */
-            const span = feature
-              ? "sm:col-span-2 lg:col-span-7"
-              : i === 1
-                ? "lg:col-span-5"
-                : "lg:col-span-6";
+            const span = "sm:col-span-1 lg:col-span-4";
+
             return (
-              <Reveal key={s.slug} delay={i * 0.07} className={span}>
+              <Reveal key={s.slug} delay={i * 0.03} className={span}>
                 <article
-                  className={`service-card card-lift group relative h-full overflow-hidden rounded-[20px] border border-line bg-card ${
-                    feature ? "p-7 sm:p-8" : "p-6"
-                  }`}
-                  style={{ "--wash": paint } as CSSProperties}
+                  className="service-card group relative flex h-full min-h-[248px] rounded-[20px] border transition-all duration-500 hover:-translate-y-1 hover:rotate-[0.2deg]"
+                  style={
+                    {
+                      "--wash": paint,
+                      borderColor: `color-mix(in srgb, ${paint} 36%, var(--line))`,
+                    } as CSSProperties
+                  }
                 >
-                  <span aria-hidden className="service-wash" />
+                  <span aria-hidden className="service-card-bg" />
+                  <span aria-hidden className="service-card-glow" />
+                  <div className="absolute inset-0 overflow-hidden rounded-[20px]">
+                    <span aria-hidden className="service-card-sheen" />
+                    <span aria-hidden className="service-card-border" />
+                  </div>
+                  <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/20" />
 
-                  <span
-                    className={`icon-tile relative grid place-items-center rounded-xl border ${
-                      feature ? "h-14 w-14" : "h-12 w-12"
-                    }`}
-                  >
-                    <Icon
-                      className={feature ? "h-7 w-7 transition-transform duration-500 group-hover:scale-110" : "h-6 w-6 transition-transform duration-500 group-hover:scale-110"}
-                      strokeWidth={2.2}
-                    />
-                  </span>
-
-                  <h3 className={`relative font-extrabold ${feature ? "mt-6 text-feature" : "mt-5 text-h3"}`}>
-                    <span className="relative inline-block">
-                      {s.title}
-                      <svg
-                        aria-hidden
-                        viewBox="0 0 200 12"
-                        preserveAspectRatio="none"
-                        className="card-stroke"
-                      >
-                        <path d="M1.5 7.8C16 4.9 38 3.1 62 2.9 92 2.7 122 3.9 152 4.6 168 4.9 184 5 198.5 4.4L198.6 7.2C184 8.2 168 8.3 152 8 122 7.4 92 6.6 62 6.9 38 7.1 16 8.2 1.4 9.6Z" />
-                      </svg>
-                    </span>
-                  </h3>
-                  <p
-                    className={`relative mt-3 leading-relaxed text-ink-soft ${
-                      feature ? "max-w-xl text-lg" : "text-base"
-                    }`}
-                  >
-                    {s.blurb}
-                  </p>
-
-                  <ul
-                    className={`relative mt-5 gap-x-8 gap-y-2 border-t border-line pt-4 ${
-                      feature ? "grid sm:grid-cols-2" : "space-y-2"
-                    }`}
-                  >
-                    {s.points.map((p) => (
-                      <li
-                        key={p}
-                        className="flex items-start gap-2.5 text-sm font-medium text-ink-soft"
-                      >
-                        <span
-                          aria-hidden
-                          className="mt-1.5 h-2 w-2 shrink-0 rounded-full"
-                          style={{ background: paint }}
-                        />
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="relative z-10 flex h-full flex-col p-4 sm:p-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="service-card-icon relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border">
+                        <Icon className="h-5 w-5 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" strokeWidth={2.1} />
+                        <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full ring-2 ring-white/90 dark:ring-white/15" style={{ background: paint }} />
+                      </span>
+                      <h3 className="text-base font-extrabold tracking-tight text-ink sm:text-lg">{s.title}</h3>
+                    </div>
+                    <p className="mt-2.5 text-sm leading-relaxed text-ink-soft">{s.blurb}</p>
+                    <div className="relative mt-auto pt-4">
+                      <div className="h-px w-full bg-gradient-to-r from-transparent via-line to-transparent" />
+                      <ul className="mt-3 space-y-1.5">
+                        {s.points.map((p, idx) => (
+                          <li key={p} className="service-card-bullet flex items-start gap-2 text-sm font-medium text-ink-soft" style={{ "--i": idx } as CSSProperties}>
+                            <span className="relative mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: paint, boxShadow: `0 0 0 4px color-mix(in srgb, ${paint} 12%, transparent)` }} />
+                            <span className="leading-snug">{p}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </article>
               </Reveal>
             );

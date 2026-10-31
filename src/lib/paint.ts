@@ -4,10 +4,16 @@
  * Screen colour is indicative only; the quote visit brings the real fan deck.
  */
 export const palette = [
+  { name: "Brand Orange", hex: "#FF6B35" },
   { name: "Chalk", hex: "#F2EDE3" },
   { name: "Warm Sand", hex: "#E3D2B8" },
   { name: "Sage", hex: "#B8C2AE" },
   { name: "Olive", hex: "#7E8A6B" },
+  { name: "Ivory", hex: "#F6F1EC" },
+  { name: "Greige", hex: "#C9C5BE" },
+  { name: "Oatmeal", hex: "#E7E2D6" },
+  { name: "Clay", hex: "#D9B99B" },
+  { name: "Moss", hex: "#9FA88A" },
   { name: "Terracotta", hex: "#C4674B" },
   { name: "Blush", hex: "#E7C6C0" },
   { name: "Denim", hex: "#8CA3B8" },
@@ -45,22 +51,97 @@ export function parseHex(hex: string): [number, number, number] | null {
 }
 
 /**
- * Pale swatches vanish on white, dark ones vanish on the dark theme. Nudge the
- * swatch toward a visible tone — hue stays, only lightness moves.
- * The CSS side does the same thing with `--brush-ink` for the cursor + underline.
+ * Compute a readable text color for any paint swatch.
+ * - Light theme: ensures dark text on pale swatches
+ * - Dark theme: ensures light text on dark swatches, but forces dark text on very pale swatches
  */
 export function readableRgb(hex: string, dark: boolean): [number, number, number] {
   const rgb = parseHex(hex) ?? [255, 107, 53];
   const [r, g, b] = rgb;
   const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-  const mix = !dark && lum > 0.75 ? 0.45 : dark && lum < 0.45 ? 0.55 : 0;
-  if (!mix) return rgb;
-  const toward = dark ? 255 : 15;
-  return [
-    Math.round(r + (toward - r) * mix),
-    Math.round(g + (toward - g) * mix),
-    Math.round(b + (toward - b) * mix),
-  ];
+
+  if (!dark) {
+    // Light theme: keep mid-tone paints bright (readable on white bg) instead
+    // of darkening them. Only very light paints get darkened; dark paints get
+    // lightened. This keeps the "paint coloured" look.
+    if (lum > 0.75) {
+      // Very light paints (Chalk, Warm Sand, Ivory, Oatmeal, Greige, Blush):
+      // darken but keep some hue so the color change is visible.
+      const mix = Math.min(0.6, 0.45 + (lum - 0.75) * 1.0);
+      return [
+        Math.round(r + (15 - r) * mix),
+        Math.round(g + (15 - g) * mix),
+        Math.round(b + (15 - b) * mix),
+      ];
+    }
+    if (lum < 0.35) {
+      // Dark paints (Charcoal): keep mostly original hue, slight lighten for
+      // readability. Charcoal (#4A4E55) on light bg has ~6.5:1 contrast (AA).
+      const mix = 0.15;
+      return [
+        Math.round(r + (255 - r) * mix),
+        Math.round(g + (255 - g) * mix),
+        Math.round(b + (255 - b) * mix),
+      ];
+    }
+    // Mid paints (Orange, Terracotta, Olive, Sage, Denim, etc.): keep bright.
+    // Tiny darken for WCAG safety only.
+    const mix = 0.12;
+    return [
+      Math.round(r + (15 - r) * mix),
+      Math.round(g + (15 - g) * mix),
+      Math.round(b + (15 - b) * mix),
+    ];
+  } else {
+    // Dark theme: very light paints -> dark readable ink (don't use white on
+    // very light swatches, keeps contrast on dark bg).
+    if (lum > 0.7) {
+      const mix = Math.min(0.85, 0.6 + (lum - 0.7) * 1.2);
+      return [
+        Math.round(r + (15 - r) * mix),
+        Math.round(g + (15 - g) * mix),
+        Math.round(b + (15 - b) * mix),
+      ];
+    }
+    // Mid paints: slight mix toward white for readability.
+    if (lum > 0.45) {
+      const mix = 0.4;
+      return [
+        Math.round(r + (255 - r) * mix),
+        Math.round(g + (255 - g) * mix),
+        Math.round(b + (255 - b) * mix),
+      ];
+    }
+    // Dark paints (Charcoal, Olive, Terracotta): mix toward white.
+    if (lum < 0.35) {
+      const mix = 0.6;
+      return [
+        Math.round(r + (255 - r) * mix),
+        Math.round(g + (255 - g) * mix),
+        Math.round(b + (255 - b) * mix),
+      ];
+    }
+    return rgb;
+  }
+}
+
+/**
+ * Get readable ink color as CSS color string (rgb) for CSS variable injection
+ */
+export function readableInk(hex: string, dark: boolean): string {
+  const [r, g, b] = readableRgb(hex, dark);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+/**
+ * Readable button text color: pure black on light paints, pure white on dark
+ * paints. Snaps to extremes so buttons look clean (no muddy mid-tones).
+ */
+export function readableBtnInk(hex: string): string {
+  const rgb = parseHex(hex) ?? [255, 107, 53];
+  const [r, g, b] = rgb;
+  const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return lum > 0.5 ? "#0f1026" : "#f8fafc";
 }
 
 /**

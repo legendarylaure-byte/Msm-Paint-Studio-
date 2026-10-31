@@ -13,6 +13,8 @@ export function BookingSection() {
           title="Grab a time that"
           accent="works for you"
           intro="Three quick steps. You'll get an email confirmation the moment it's in, and we'll lock the slot within one business day."
+          brushWords={3}
+          followPaint
         />
 
         <div className="mt-8 flex flex-wrap justify-center gap-x-7 gap-y-3 text-sm font-bold text-ink-soft">
@@ -22,7 +24,7 @@ export function BookingSection() {
             { icon: Palette, t: "Free colour advice" },
           ].map((b) => (
             <span key={b.t} className="flex items-center gap-2">
-              <b.icon className="h-4.5 w-4.5 text-accent" />
+              <b.icon className="h-4.5 w-4.5 text-brush-ink" />
               {b.t}
             </span>
           ))}

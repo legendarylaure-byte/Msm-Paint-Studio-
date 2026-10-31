@@ -13,7 +13,32 @@ import {
   Check,
 } from "lucide-react";
 import { site } from "@/lib/site";
-import { palette, rooms, type RoomId } from "@/lib/paint";
+import { palette, rooms, type RoomId, readableInk, parseHex } from "@/lib/paint";
+
+const colorHints: Record<string, string> = {
+  "Brand Orange": "Energetic & welcoming — great for living areas",
+  "Chalk": "Clean & airy — perfect for any room",
+  "Warm Sand": "Cozy & grounded — ideal for bedrooms",
+  "Sage": "Calm & natural — promotes relaxation",
+  "Olive": "Earthy & sophisticated — great for studies",
+  "Ivory": "Soft & elegant — timeless appeal",
+  "Greige": "Modern & versatile — suits any space",
+  "Oatmeal": "Warm & inviting — cozy living rooms",
+  "Clay": "Rich & earthy — feature walls",
+  "Moss": "Fresh & organic — nature-inspired",
+  "Terracotta": "Bold & warm — statement rooms",
+  "Blush": "Soft & romantic — nurseries & bedrooms",
+  "Denim": "Cool & calming — modern spaces",
+  "Charcoal": "Dramatic & modern — accent walls",
+  "Midnight Teal": "Deep & sophisticated — spa-like retreats",
+  "Forest Green": "Lush & calming — nature immersion",
+  "Deep Purple": "Rich & luxurious — elegant spaces",
+  "Burgundy": "Rich & opulent — dramatic accents",
+  "Navy Blue": "Classic & serene — timeless elegance",
+  "Emerald Green": "Vibrant & refreshing — energizing",
+  "Ruby Red": "Passionate & bold — statement impact",
+  "Sapphire Blue": "Cool & professional — focused environments",
+};
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion";
 import { RoomStage } from "@/components/hero/RoomStage";
 
@@ -37,7 +62,8 @@ function isLight(hex: string) {
 export function Hero() {
   const reduce = useReducedMotionSafe();
   const [room, setRoom] = useState<RoomId>("living");
-  const [wall, setWall] = useState<string>(palette[1].hex);
+  // Brand Orange is the default (palette[0])
+  const [wall, setWall] = useState<string>(palette[0].hex);
   const [pending, setPending] = useState<string | null>(null);
   const pendingRef = useRef<string | null>(null);
   /* the picked colour blooming across the viewport */
@@ -46,6 +72,15 @@ export function Hero() {
   const setBrushPaint = useCallback((hex: string) => {
     if (typeof document !== "undefined") {
       document.documentElement.style.setProperty("--brush-paint", hex);
+      // Also set readable ink for text contrast
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const ink = readableInk(hex, isDark);
+      document.documentElement.style.setProperty("--brush-ink", ink);
+      // Toggle paint luminance class for button text color
+      const rgb = parseHex(hex) ?? [255, 107, 53];
+      const lum = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255;
+      document.documentElement.classList.remove("light-paint", "dark-paint");
+      document.documentElement.classList.add(lum > 0.5 ? "light-paint" : "dark-paint");
       /* the booking form listens for this so the quote carries the colour */
       window.dispatchEvent(new CustomEvent("brush:paint", { detail: hex }));
     }
@@ -65,6 +100,33 @@ export function Hero() {
   const active = pending ?? wall;
   const activeName = palette.find((c) => c.hex === active)?.name ?? "Custom";
 
+  // Update readable ink when theme changes
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const ink = readableInk(active, isDark);
+      document.documentElement.style.setProperty("--brush-ink", ink);
+      // brush-ink-dark: lightened version for dark panels (always light enough)
+      const rgb = parseHex(active) ?? [255, 107, 53];
+      const [r, g, b] = rgb;
+      // Mix 50% toward white for consistent lightness on dark panels
+      const dr = Math.round(r + (255 - r) * 0.5);
+      const dg = Math.round(g + (255 - g) * 0.5);
+      const db = Math.round(b + (255 - b) * 0.5);
+      document.documentElement.style.setProperty("--brush-ink-dark", `rgb(${dr}, ${dg}, ${db})`);
+    };
+    // Run on mount to set initial values
+    handleThemeChange();
+
+    const observer = new MutationObserver(handleThemeChange);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, [active]);
+
   const pick = useCallback(
     (hex: string, x: number, y: number) => {
       setBrushPaint(hex);
@@ -83,7 +145,7 @@ export function Hero() {
   );
 
   return (
-    <section className="relative">
+    <section id="home" className="relative scroll-mt-24">
       <div className="relative isolate overflow-hidden bg-surface">
         <div className="relative h-[38svh] min-h-[280px] sm:h-[46svh] lg:absolute lg:inset-0 lg:h-full lg:min-h-0">
           <div className="hero-drift h-full w-full">
@@ -97,14 +159,14 @@ export function Hero() {
                 "linear-gradient(90deg, rgb(var(--scrim)) 0%, rgb(var(--scrim)) 24%, rgb(var(--scrim) / 0.88) 36%, rgb(var(--scrim) / 0.57) 48%, rgb(var(--scrim) / 0.22) 58%, rgb(var(--scrim) / 0) 68%)",
             }}
           />
-          <div className="absolute top-4 right-4 z-20 flex gap-0.5 rounded-full border border-white/25 bg-black/35 p-1 backdrop-blur-md lg:top-6 lg:right-8">
+          <div className="absolute top-4 right-4 z-20 flex gap-0.5 rounded-full border border-white/25 bg-black/50 p-1 backdrop-blur-md lg:top-6 lg:right-8">
             {rooms.map((r) => (
               <button
                 key={r.id}
                 type="button"
                 onClick={() => setRoom(r.id)}
                 aria-pressed={room === r.id}
-                className={`rounded-full px-3 py-1.5 text-xs font-extrabold tracking-wide transition-colors ${room === r.id ? "bg-white text-ink" : "text-white/80 hover:text-white"}`}
+                className={`rounded-full px-3 py-1.5 text-xs font-extrabold tracking-wide transition-all duration-300 ${room === r.id ? "bg-brush-paint text-onbrand shadow-[0_2px_8px_-2px_var(--brush-paint)]" : "text-white/90 hover:text-white hover:bg-white/15"}`}
               >
                 {r.short}
               </button>
@@ -147,7 +209,7 @@ export function Hero() {
                 className="rise mt-6 flex flex-wrap items-center gap-3 sm:mt-8"
                 style={{ "--d": "500ms" } as CSSProperties}
               >
-                <Link href="/#book" className="btn btn-primary gloss group">
+                <Link href="/#book" className="btn btn-brush gloss group">
                   <span className="relative z-10 flex items-center gap-2">
                     Get {activeName} quoted
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -175,7 +237,7 @@ export function Hero() {
                   </p>
                   <p className="hidden text-xs font-semibold text-ink-mute sm:block">move the brush across the room</p>
                 </div>
-                <div role="group" aria-label="Wall colour" className="mt-3 flex flex-wrap gap-2.5">
+                <div role="radiogroup" aria-label="Wall colour" className="mt-3 flex flex-wrap gap-2.5">
                   {palette.map((c) => {
                     const on = c.hex === active;
                     return (
@@ -186,16 +248,35 @@ export function Hero() {
                           const r = e.currentTarget.getBoundingClientRect();
                           pick(c.hex, r.left + r.width / 2, r.top + r.height / 2);
                         }}
+                        onKeyDown={(e) => {
+                          const idx = palette.findIndex((p) => p.hex === c.hex);
+                          if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                            e.preventDefault();
+                            const next = palette[(idx + 1) % palette.length];
+                            const btn = e.currentTarget.parentElement?.querySelector(`button[title="${next.name}"]`) as HTMLButtonElement;
+                            btn?.focus();
+                            btn?.click();
+                          } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                            e.preventDefault();
+                            const prev = palette[(idx - 1 + palette.length) % palette.length];
+                            const btn = e.currentTarget.parentElement?.querySelector(`button[title="${prev.name}"]`) as HTMLButtonElement;
+                            btn?.focus();
+                            btn?.click();
+                          }
+                        }}
                         aria-pressed={on}
+                        role="radio"
+                        aria-checked={on}
+                        tabIndex={on ? 0 : -1}
                         title={c.name}
-                        className={`grid h-10 w-10 place-items-center rounded-full border transition-[transform,border-color,box-shadow] duration-200 ${on ? "-translate-y-0.5 border-ink shadow-[0_6px_16px_-6px_rgba(0,0,0,0.5)]" : "border-black/15 hover:-translate-y-0.5"}`}
+                        className={`grid h-11 w-11 place-items-center rounded-full border swatch-btn transition-[transform,border-color,box-shadow] duration-200 ${on ? "swatch-selected border-transparent" : "border-black/20 hover:-translate-y-0.5 active:translate-y-0.5"} ${isLight(c.hex) ? "swatch-light" : ""}`}
                         style={{ background: c.hex }}
                       >
                         {on ? (
                           <Check
                             className="h-4 w-4"
                             strokeWidth={3.5}
-                            style={{ color: isLight(c.hex) ? "#16162a" : "#fffdf7" }}
+                            style={{ color: isLight(c.hex) ? "#16162a" : "#fffdf7", textShadow: isLight(c.hex) ? "0 0 1px rgba(255,255,255,0.8)" : "0 0 1px rgba(0,0,0,0.5)" }}
                             aria-hidden
                           />
                         ) : null}
@@ -204,10 +285,23 @@ export function Hero() {
                     );
                   })}
                 </div>
-                <p aria-live="polite" className="mt-2.5 text-xs text-ink-soft">
-                  <strong className="font-bold text-ink">{activeName}</strong> travels with
-                  your quote. Screen shade is a guide — we bring the fan deck.
+                <p aria-live="polite" className="mt-3 flex items-center gap-2 text-sm font-bold text-ink">
+                  <span
+                    className="inline-block h-4 w-4 shrink-0 rounded-full border border-black/10 shadow-sm"
+                    style={{ background: active }}
+                    aria-hidden
+                  />
+                  <strong className="font-extrabold">{activeName}</strong>
+                  <span className="font-medium text-ink-soft">travels with your quote</span>
                 </p>
+                <p className="mt-1 text-xs text-ink-mute">
+                  Screen shade is a guide — we bring the fan deck.
+                </p>
+                {colorHints[activeName] && (
+                  <p className="mt-2 text-xs font-medium text-brush-ink">
+                    {colorHints[activeName]}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -220,7 +314,7 @@ export function Hero() {
               key={t.label}
               className="flex items-center gap-3 bg-card px-5 py-4 transition-colors duration-300 hover:bg-surface-2"
             >
-              <t.icon className="h-5 w-5 shrink-0 text-accent" strokeWidth={2.2} />
+              <t.icon className="h-5 w-5 shrink-0 text-brush-ink" strokeWidth={2.2} />
               <span className="text-sm font-bold leading-tight text-ink">{t.label}</span>
             </li>
           ))}

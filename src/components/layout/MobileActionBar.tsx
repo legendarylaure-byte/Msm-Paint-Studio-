@@ -41,7 +41,7 @@ export function MobileActionBar() {
         </a>
         <Link
           href="/#book"
-          className="btn btn-primary gloss flex-1 py-3.5 text-sm"
+          className="btn btn-brush gloss flex-1 py-3.5 text-sm"
         >
           <MessageCircle className="h-4 w-4" strokeWidth={2.5} />
           Free quote

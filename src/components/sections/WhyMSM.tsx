@@ -73,11 +73,11 @@ export function WhyMSM() {
         <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
           <div>
             <Reveal>
-              <p className="eyebrow text-accent-dark">Why MSM</p>
+              <p className="eyebrow text-brush-ink-dark">Why MSM</p>
             </Reveal>
             <h2 className="mt-3 text-h2 font-extrabold text-balance">
               <WordReveal text="Real craft, now with" accent="a studio behind it" underlineTone="light" />
-              <span className="text-accent-dark">.</span>
+              <span className="text-brush-ink-dark">.</span>
             </h2>
             <Reveal delay={0.12}>
               <p className="mt-5 text-lg leading-relaxed text-onnight/70">
@@ -95,17 +95,17 @@ export function WhyMSM() {
             </Reveal>
           </div>
 
-          {/* values as a list, not three more cards */}
-          <div className="border-t border-onnight/12">
+          {/* values */}
+          <div className="flex flex-col gap-4">
             {values.map((v, i) => (
               <Reveal key={v.title} delay={i * 0.08}>
-                <div className="flex gap-5 border-b border-onnight/12 py-7">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-dark/15">
-                    <v.icon className="h-5.5 w-5.5 text-accent-dark" strokeWidth={2.1} />
+                <div className="flex items-start gap-4 rounded-2xl border border-onnight/15 bg-onnight/[0.06] p-5 shadow-[0_20px_60px_-40px_color-mix(in srgb, var(--brush-paint) 40%, transparent)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-brush-ink/50 hover:bg-onnight/[0.1] hover:shadow-[0_24px_70px_-36px_color-mix(in srgb, var(--brush-paint) 50%, transparent)]">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brush-ink/18 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                    <v.icon className="h-5 w-5 text-brush-ink-dark" strokeWidth={2.1} />
                   </span>
-                  <div>
-                    <h3 className="text-h3 font-extrabold text-onnight">{v.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-onnight/65">{v.text}</p>
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-extrabold text-onnight sm:text-xl">{v.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-onnight/70">{v.text}</p>
                   </div>
                 </div>
               </Reveal>
