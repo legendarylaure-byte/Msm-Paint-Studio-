@@ -352,7 +352,7 @@ export function Booking() {
                     <input
                       type="tel"
                       className={input}
-                      placeholder="0400 000 000"
+                      placeholder="0435 479 032"
                       value={data.phone}
                       onChange={(e) => set("phone", e.target.value)}
                     />

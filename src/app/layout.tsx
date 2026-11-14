@@ -40,7 +40,7 @@ const mono = Space_Mono({
 
 const title = `${site.name} — Painters in Berwick VIC | Free Quotes`;
 const description =
-  "MSM Painting Studio — professional house, room, wall, fence and commercial painting in Berwick VIC 3806 and all of Casey–Cardinia. Free quotes, free colour advice. Book online.";
+  "Hedgeley Painting — professional house, room, wall, fence and commercial painting in Berwick VIC 3806 and all of Casey–Cardinia. Free quotes, free colour advice. Book online.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ff6b35",
+  themeColor: "#E5B745",
   width: "device-width",
   initialScale: 1,
 };
@@ -118,7 +118,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="flex min-h-full flex-col">
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem("msm-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark")}}catch(e){}try{document.documentElement.style.setProperty("--brush-ink","color-mix(in srgb, #ff6b35 75%, #0f1026)");document.documentElement.classList.add("light-paint")}catch(e){}`,
+            __html: `try{if(localStorage.getItem("msm-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark")}}catch(e){}try{document.documentElement.style.setProperty("--brush-ink","color-mix(in srgb, #E5B745 75%, #0f1026)");document.documentElement.classList.add("light-paint")}catch(e){}`,
           }}
         />
         <script

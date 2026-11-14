@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { Paintbrush, Mail, ShieldCheck, Lock } from "lucide-react";
-import { ElementsLoginBg } from "@/components/ui/ElementsLoginBg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 function GoogleIcon() {
@@ -23,17 +22,48 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [csrfToken, setCSRFToken] = useState<string | null>(null);
+
+  // Fetch CSRF token on mount
+  useEffect(() => {
+    fetch("/api/admin/csrf")
+      .then((res) => res.json())
+      .then((data) => setCSRFToken(data.token ?? null))
+      .catch((e) => console.error("CSRF fetch error:", e));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    if (password === "msmpainting2026") {
-      document.cookie = "admin-session=authenticated; path=/; max-age=86400";
-      router.push("/admin/leads");
-    } else {
-      setError("Invalid password");
+    if (!csrfToken) {
+      setError("Security token missing");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        router.push("/admin/leads");
+      } else {
+        setError(data.error || "Login failed");
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Connection error");
       setLoading(false);
     }
   };
@@ -52,78 +82,55 @@ export default function AdminLoginPage() {
       <div className="absolute inset-0 z-[0] hidden motion-reduce:block bg-gradient-to-br from-[#050510] via-[#0a0a18] to-[#000004]" />
       <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/35 via-black/12 to-black/18" />
       <div className="absolute inset-0 z-[2] opacity-2">
-        <ElementsLoginBg />
-      </div>
-      <div className="pointer-events-none absolute inset-0 z-[3] opacity-12">
-        <div className="absolute inset-0 bg-[radial-gradient(280%_280%_at_50%_0%,rgba(255,107,53,0.1)_0%,transparent_72%)]" />
-        <div className="starfield absolute inset-0 opacity-14" />
-        <div className="absolute inset-0 bg-[radial-gradient(190%_190%_at_50%_100%,rgba(0,0,4,0.45)_0%,rgba(0,0,4,0.35)_70%,transparent_100%)]" />
+        {/* Background elements */}
       </div>
 
       <div className="relative z-[4] mx-auto flex min-h-screen max-w-7xl items-center justify-center px-5 py-12 sm:px-8">
         <div className="w-full max-w-md">
           <div className="mb-10 text-center">
             <Link href="/" className="group mx-auto mb-6 inline-flex items-center gap-2.5">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-tangerine text-onbrand shadow-[0_12px_40px_-10px_rgba(255,107,53,0.98)] transition-all duration-500 group-hover:rotate-[-12deg] group-hover:scale-105">
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-[color:#E5B745] text-onbrand shadow-[0_12px_40px_-10px_rgba(229,183,69,0.98)] transition-all duration-500 group-hover:rotate-[-12deg] group-hover:scale-105">
                 <Paintbrush className="h-6 w-6" strokeWidth={2.4} />
               </span>
               <span className="leading-none text-left">
-                <span className="block font-display text-xl font-extrabold tracking-tight text-white">MSM Painting</span>
+                <span className="block font-display text-xl font-extrabold tracking-tight text-white">Hedgeley Painting</span>
                 <span className="block text-xs font-extrabold uppercase tracking-[0.25em] text-accent">Studio</span>
               </span>
             </Link>
             <h1 className="text-h2 font-extrabold text-white tracking-tight">Admin Portal</h1>
             <p className="mt-2.5 text-base text-white/75">Secure access to your dashboard</p>
-            <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-white/80 backdrop-blur-sm">
-              <ShieldCheck className="h-3.5 w-3.5 text-accent" />
-              <span>Restricted Access</span>
-            </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[28px] border border-white/25 bg-gradient-to-b from-white/18 to-white/10 p-8 shadow-[0_80px_160px_-90px_rgba(255,107,53,0.7)] backdrop-blur-2xl">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <span aria-hidden className="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-accent/35 blur-[120px]" />
-            <span aria-hidden className="absolute -left-32 -bottom-32 h-64 w-64 rounded-full bg-orange-500/25 blur-[120px]" />
-            <span aria-hidden className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-tangerine/15 blur-[100px]" />
-            
-            <form onSubmit={handleSubmit} className="relative space-y-5">
-              <div>
-                <label htmlFor="password" className="mb-2 flex items-center gap-2 text-sm font-bold text-white/95">
-                  <Lock className="h-4 w-4" />
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  className="w-full rounded-xl border border-white/30 bg-white/12 px-4 py-3 text-white placeholder:text-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-all duration-200 focus:border-accent focus:bg-white/16 focus:outline-none focus:ring-2 focus:ring-accent/40"
-                  required
-                />
-              </div>
-              
-              {error && (
-                <div className="rounded-xl bg-red-500/20 border border-red-500/40 px-4 py-3 text-sm font-semibold text-red-300">
-                  {error}
-                </div>
-              )}
-              
-              <button type="submit" disabled={loading} className="btn btn-primary gloss group relative w-full overflow-hidden">
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  {loading ? "Signing in..." : <><Lock className="h-5 w-5" />Sign in to Dashboard</>}
-                </span>
+          <div className="mt-10 rounded-xl border border-white/25 bg-white/10 p-8 shadow-[0_80px_160px_-90px_rgba(229,183,69,0.7)] backdrop-blur-2xl">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-base font-medium text-white/80 backdrop-blur-sm transition-colors focus:border-[color:#E5B745] focus:bg-white/5"
+              />
+              <input
+                type="hidden"
+                name="csrfToken"
+                value={csrfToken || ""}
+                className="hidden"
+              />
+              <button
+                type="submit"
+                className="w-full rounded-xl bg-[color:#E5B745] py-3 text-center text-lg font-bold text-white font-extrabold tracking-tight transition-colors hover:opacity-95 active:scale-95"
+              >
+                Sign In
               </button>
+              {error && (
+                <p className="mt-2 text-sm text-white/70">{error}</p>
+              )}
+              <p className="mt-4 text-sm text-white/60">
+                Password is case-sensitive. Use the credentials from your admin panel.
+              </p>
             </form>
           </div>
-          
-          <p className="mt-8 text-center text-sm text-white/75">
-            <Link href="/" className="group inline-flex items-center gap-1 transition-colors hover:text-white">
-              <span className="transition-transform duration-200 group-hover:-translate-x-0.5">←</span>
-              <span>Back to website</span>
-            </Link>
-          </p>
         </div>
       </div>
     </main>

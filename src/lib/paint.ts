@@ -4,8 +4,8 @@
  * Screen colour is indicative only; the quote visit brings the real fan deck.
  */
 export const palette = [
+  { name: "Warm Mustard", hex: "#E5B745" },
   { name: "Brand Orange", hex: "#FF6B35" },
-  { name: "Chalk", hex: "#F2EDE3" },
   { name: "Warm Sand", hex: "#E3D2B8" },
   { name: "Sage", hex: "#B8C2AE" },
   { name: "Olive", hex: "#7E8A6B" },

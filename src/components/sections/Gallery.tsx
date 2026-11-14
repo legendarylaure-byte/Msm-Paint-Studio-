@@ -71,7 +71,7 @@ export function Gallery() {
           eyebrow="Our work"
           title="Proof in every"
           accent="coat"
-          intro="A glimpse of the prep, precision and finish that goes into every MSM Painting Studio job across Berwick, Casey & Cardinia."
+          intro="A glimpse of the prep, precision and finish that goes into every Hedgeley Painting job across Berwick, Casey & Cardinia."
           brushWords={3}
           followPaint
         />
@@ -125,7 +125,7 @@ export function Gallery() {
                   setCurrentIndex(realIndex);
                 }}
                 className={`h-2.5 w-10 rounded-full transition-all duration-300 border border-line/40 ${index === currentIndex % gallery.length
-                    ? "bg-brush-paint scale-100 shadow-[0_0_0_3px_rgba(255,107,53,0.15)]"
+                    ? "bg-brush-paint scale-100 shadow-[0_0_0_3px_color-mix(in_srgb,var(--brush-paint)_15%,_transparent)]"
                     : "bg-ink/25 dark:bg-white/50 hover:bg-ink/50 dark:hover:bg-white/80 scale-75"
                   }`}
                 aria-label={`Go to image ${index + 1}`}

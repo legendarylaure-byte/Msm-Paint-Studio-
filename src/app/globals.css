@@ -25,10 +25,10 @@
   /* hero scrim, as bare rgb so the alpha stays tunable */
   --scrim: 248 249 252;
   /* brand accent */
-  --accent: #ff6b35;
+  --accent: #E5B745;
   --accent-dark: #e85a24;
   /* splash colour — Hero overrides this with the picked wall swatch */
-  --brush-paint: #ff6b35;
+  --brush-paint: #E5B745;
   /* fallback for browsers without relative colour; the @supports block below
      replaces this with a richer oklch version */
   --brush-ink: color-mix(in srgb, var(--brush-paint) 75%, var(--ink));
@@ -91,8 +91,8 @@
 
 @theme {
   /* fixed brand — identical in both themes */
-  --color-tangerine: #ff6b35;
-  --color-tangerine-dark: #e5521d;
+  --color-tangerine: #E5B745;
+  --color-tangerine-dark: #d4a847;
   --color-sunshine: #ffc93c;
   --color-sky: #4ea8de;
   --color-sky-dark: #2b87bd;
@@ -104,7 +104,7 @@
   /* dark text for light brand fills (lime, sunshine) — fixed in both themes */
   --color-onbrand: #16162a;
   /* tangerine for text on always-dark panels (fixed, both themes) */
-  --color-accent-dark: #ff8a5c;
+  --color-accent-dark: #e8c060;
 
   /* fluid type scale */
   --text-h1: clamp(2.35rem, 5.4vw, 4.25rem);

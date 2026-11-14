@@ -73,7 +73,7 @@ export function WhyMSM() {
         <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
           <div>
             <Reveal>
-              <p className="eyebrow text-brush-ink-dark">Why MSM</p>
+              <p className="eyebrow text-brush-ink-dark">Why Hedgeley Painting</p>
             </Reveal>
             <h2 className="mt-3 text-h2 font-extrabold text-balance">
               <WordReveal text="Real craft, now with" accent="a studio behind it" underlineTone="light" />

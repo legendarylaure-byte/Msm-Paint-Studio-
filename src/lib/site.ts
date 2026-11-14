@@ -1,17 +1,17 @@
 /**
- * MSM Painting Studio — single source of truth for site content.
+ * Hedgeley Painting — single source of truth for site content.
  * Used by the marketing pages, the FAQ, and the chatbot knowledge base.
  * Everything here is placeholder copy the client can later override from /admin.
  */
 
 export const site = {
-  name: "MSM Painting Studio",
+  name: "Hedgeley Painting",
   tagline: "One painter's eye. A full team's finish.",
   url: "https://msmpaintingstudio.vercel.app",
   email: "mesaykar@gmail.com",
-  phone: "0400 000 000", // TODO: client's real mobile
-  phoneHref: "tel:+61400000000",
-  abn: "00 000 000 000", // TODO: client's real ABN
+  phone: "0435 479 032", // TODO: client's real mobile
+  phoneHref: "tel:+61435479032",
+  abn: "13 485 973 915", // TODO: client's real ABN
   lastUpdated: "20 October 2026", // update when legal pages change
   address: {
     line1: "9 Hedgeley Drive",
@@ -41,9 +41,10 @@ export const site = {
   ],
   social: {
     // TODO: real profiles — placeholders keep the links valid
-    instagram: "https://instagram.com/msmpaintingstudio",
-    facebook: "https://facebook.com/msmpaintingstudio",
+    instagram: "https://instagram.com/hedgeley.painting",
+    facebook: "https://facebook.com/hedgeley.painting",
     google: "https://share.google/xxxx", // replace with Business Profile link
+    whatsapp: "https://wa.me/61435479032",
   },
   stats: [
     { value: 1, suffix: " day", label: "Quote turnaround" },
@@ -154,7 +155,7 @@ export const faqs = [
   },
   {
     q: "Are you insured?",
-    a: "Yes — MSM Painting Studio carries full public liability cover. Certificates can be provided on request before any work begins.",
+    a: "Yes — Hedgeley Painting carries full public liability cover. Certificates can be provided on request before any work begins.",
   },
 ];
 
@@ -236,7 +237,7 @@ export const seedKnowledge = [
     category: "Credentials",
     question: "Are you insured and experienced?",
     answer:
-      "Yes. MSM Painting Studio carries full public liability insurance, and our painters are experienced across houses, rooms, buildings, fences and commercial spaces.",
+      "Yes. Hedgeley Painting carries full public liability insurance, and our painters are experienced across houses, rooms, buildings, fences and commercial spaces.",
   },
   {
     category: "Credentials",

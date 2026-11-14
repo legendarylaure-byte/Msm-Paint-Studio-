@@ -185,7 +185,7 @@ export function TestimonialsCarousel() {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`h-2.5 w-10 rounded-full transition-all duration-300 border border-line/40 ${index === currentIndex % allTestimonials.length
-                    ? "bg-brush-paint scale-100 shadow-[0_0_0_3px_rgba(255,107,53,0.15)]"
+                    ? "bg-brush-paint scale-100 shadow-[0_0_0_3px_color-mix(in_srgb,var(--brush-paint)_15%,_transparent)]"
                     : "bg-ink/25 dark:bg-white/50 hover:bg-ink/50 dark:hover:bg-white/80 scale-75"
                   }`}
                 aria-label={`Go to testimonial ${index + 1}`}

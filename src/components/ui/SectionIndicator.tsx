@@ -15,7 +15,7 @@ const sections = [
   { id: "home", label: "Home" },
   { id: "services", label: "Services" },
   { id: "gallery", label: "Our work" },
-  { id: "why", label: "Why MSM" },
+  { id: "why", label: "Why Hedgeley Painting" },
   { id: "process", label: "Process" },
   { id: "painter", label: "Our painter" },
   { id: "testimonials", label: "Testimonials" },

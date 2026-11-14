@@ -12,7 +12,7 @@ const sections = [
     h: "1. Who we are",
     p: [
       `${site.name} (${site.address.full}) operates this website and can be contacted at ${site.email}.`,
-      "In this policy, “we”, “us” and “our” refer to MSM Painting Studio.",
+      "In this policy, “we”, “us” and “our” refer to Hedgeley Painting.",
     ],
   },
   {

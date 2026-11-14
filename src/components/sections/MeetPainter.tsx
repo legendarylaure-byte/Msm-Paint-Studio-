@@ -6,7 +6,7 @@ function PaintCard() {
     <div className="group relative aspect-[4/5] overflow-hidden rounded-[28px] border border-white/40 bg-white/60 shadow-[0_40px_90px_-50px_rgba(15,16,38,0.9)] backdrop-blur-xl transition-transform duration-700 hover:scale-[1.01] dark:border-white/10 dark:bg-white/5">
       <Image
         src="/team/mesay-owner.jpg"
-        alt="Owner of MSM Painting Studio - hands-on painting professional"
+        alt="Owner of Hedgeley Painting - hands-on painting professional"
         fill
         sizes="(max-width: 768px) 100vw, 50vw"
         className="object-cover object-top transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"

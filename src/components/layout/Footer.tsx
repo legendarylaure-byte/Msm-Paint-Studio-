@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Paintbrush, Mail, Phone, MapPin } from "lucide-react";
 import { Year } from "@/components/ui/Year";
@@ -27,12 +28,10 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-12 px-5 pt-16 pb-10 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-5">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-brush-paint">
-              <Paintbrush className="h-5 w-5" strokeWidth={2.4} />
-            </span>
-            <span className="font-display text-lg font-extrabold">
-              MSM Painting <span className="text-brush-ink-dark">Studio</span>
-            </span>
+            <span className="flex items-center gap-2">
+            <Image src="/logo.jpg" alt="Hedgeley Painting" height={48} width={200} className="h-12 w-auto object-contain" />
+            <span className="hidden lg:block font-display font-extrabold tracking-tight text-brush-paint">Hedgeley Painting</span>
+          </span>
           </div>
           <p className="max-w-xs text-sm leading-relaxed text-onnight/70">
             Hands-on painting craft, now its own studio. Houses, rooms, walls,

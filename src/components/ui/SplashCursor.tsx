@@ -7,7 +7,7 @@ import { parseHex, readableRgb } from "@/lib/paint";
 
 type Drop = { x: number; y: number; r: number; vx: number; vy: number; life: number };
 
-const FALLBACK = "#ff6b35";
+const FALLBACK = "#E5B745";
 
 export function SplashCursor() {
   const reduce = useReducedMotionSafe();

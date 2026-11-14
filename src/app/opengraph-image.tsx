@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { site } from "@/lib/site";
 
-export const alt = `${site.name} — Painters in Berwick VIC`;
+export const alt = `Hedgeley Painting — Painters in Berwick VIC`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -17,7 +17,7 @@ export default function OpengraphImage() {
           alignItems: "center",
           gap: 64,
           padding: "72px 80px",
-          background: "linear-gradient(135deg, #ff6b35 0%, #e5521d 58%, #16162a 100%)",
+          background: "linear-gradient(135deg, #E5B745 0%, #d4a847 58%, #16162a 100%)",
           color: "#fffdf7",
           fontFamily: "sans-serif",
         }}
@@ -43,7 +43,7 @@ export default function OpengraphImage() {
                 background: "#fffdf7",
               }}
             />
-            MSM Painting Studio
+            Hedgeley Painting
           </div>
           <div
             style={{
