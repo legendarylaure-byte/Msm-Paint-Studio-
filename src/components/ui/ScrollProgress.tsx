@@ -27,7 +27,7 @@ export default function ScrollProgress() {
       className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px]"
     >
       <div
-        className="h-full origin-left bg-brush-ink"
+        className="h-full origin-left bg-brush-paint dark:bg-brush-ink-dark"
         style={{ transform: `scaleX(${p})` }}
       />
     </div>

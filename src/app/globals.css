@@ -1402,10 +1402,14 @@ html.has-brush [contenteditable="true"] {
 [data-theme="dark"] .paint-underline-full {
   color: var(--brush-ink-dark) !important;
 }
-
 /* paint-underline-light for dark panels */
 .paint-underline-light {
   color: color-mix(in srgb, var(--brush-paint) 58%, #ffffff);
+}
+/* visible underline in light theme (on light paints like Ivory, Warm Sand) */
+[data-theme="light"] .paint-underline,
+[data-theme="light"] .paint-underline-full {
+  color: var(--brush-ink) !important;
 }
 
 [data-theme="dark"] .paint-underline-light {

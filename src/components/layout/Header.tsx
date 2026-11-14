@@ -59,7 +59,10 @@ export function Header() {
         <Link href="/" className="group flex items-center gap-2.5" aria-label={`${site.name} home`}>
           <span className="flex items-center gap-2">
             <Image src="/logo.jpg" alt="Hedgeley Painting" height={40} width={160} className="h-10 w-auto object-contain rounded-lg mix-blend-mode:multiply" style={{ transition: "opacity 0.3s ease" }} />
-            <span className="hidden sm:block font-display font-extrabold tracking-tight text-brush-ink dark:text-brush-dark">Hedgeley Painting</span>
+            <span className="hidden sm:block font-display font-extrabold tracking-tight text-brush-ink dark:text-brush-ink-dark">
+            Hedgeley Painting
+            <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-black dark:bg-white opacity-50 transform origin-bottom-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+          </span>
           </span>
         </Link>
 

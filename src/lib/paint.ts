@@ -24,7 +24,7 @@ export type PaletteEntry = (typeof palette)[number];
 
 export const rooms = [
   { id: "living", label: "Living room", short: "Living" },
-  { id: "bedroom", label: "Bedroom", short: "Bed" },
+  { id: "bedroom", label: "Bedroom", short: "Bedroom" },
   { id: "nursery", label: "Nursery", short: "Nursery" },
 ] as const;
 
@@ -54,6 +54,7 @@ export function parseHex(hex: string): [number, number, number] | null {
  * Compute a readable text color for any paint swatch.
  * - Light theme: ensures dark text on pale swatches
  * - Dark theme: ensures light text on dark swatches, but forces dark text on very pale swatches
+ *   by always mixing toward white (never darkening) so text remains visible.
  */
 export function readableRgb(hex: string, dark: boolean): [number, number, number] {
   const rgb = parseHex(hex) ?? [255, 107, 53];
@@ -93,35 +94,36 @@ export function readableRgb(hex: string, dark: boolean): [number, number, number
       Math.round(b + (15 - b) * mix),
     ];
   } else {
-    // Dark theme: very light paints -> dark readable ink (don't use white on
-    // very light swatches, keeps contrast on dark bg).
+    // Dark theme: ALWAYS mix toward white — never darken — so text is always
+    // visible on dark backgrounds. Light paints get slight lighten, mids get
+    // 50% mix, darks get 70% mix toward white.
     if (lum > 0.7) {
-      const mix = Math.min(0.85, 0.6 + (lum - 0.7) * 1.2);
+      // Very light paints (Ivory, Warm Sand, Oatmeal, Blush, Greige): slight
+      // mix toward white for readability on dark bg.
+      const mix = 0.25;
       return [
-        Math.round(r + (15 - r) * mix),
-        Math.round(g + (15 - g) * mix),
-        Math.round(b + (15 - b) * mix),
+        Math.round(r + (255 - r) * mix),
+        Math.round(g + (255 - g) * mix),
+        Math.round(b + (255 - b) * mix),
       ];
     }
-    // Mid paints: slight mix toward white for readability.
+    // Mid paints: 50% mix toward white for good contrast on dark bg.
     if (lum > 0.45) {
-      const mix = 0.4;
+      const mix = 0.5;
       return [
         Math.round(r + (255 - r) * mix),
         Math.round(g + (255 - g) * mix),
         Math.round(b + (255 - b) * mix),
       ];
     }
-    // Dark paints (Charcoal, Olive, Terracotta): mix toward white.
-    if (lum < 0.35) {
-      const mix = 0.6;
-      return [
-        Math.round(r + (255 - r) * mix),
-        Math.round(g + (255 - g) * mix),
-        Math.round(b + (255 - b) * mix),
-      ];
-    }
-    return rgb;
+    // Dark paints (Charcoal, Olive, Terracotta): mix heavily toward white
+    // so they remain readable on dark backgrounds.
+    const mix = 0.7;
+    return [
+      Math.round(r + (255 - r) * mix),
+      Math.round(g + (255 - g) * mix),
+      Math.round(b + (255 - b) * mix),
+    ];
   }
 }
 
