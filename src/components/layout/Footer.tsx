@@ -29,8 +29,8 @@ export function Footer() {
         <div className="space-y-5">
           <div className="flex items-center gap-2.5">
             <span className="flex items-center gap-2">
-            <Image src="/logo.jpg" alt="Hedgeley Painting" height={48} width={200} className="h-12 w-auto object-contain" />
-            <span className="hidden lg:block font-display font-extrabold tracking-tight text-brush-paint">Hedgeley Painting</span>
+            <Image src="/logo.jpg" alt="Hedgeley Painting" height={48} width={200} className="h-12 w-auto object-contain rounded-lg mix-blend-mode:multiply" style={{ transition: "opacity 0.3s ease" }} />
+            <span className="hidden lg:block font-display font-extrabold tracking-tight text-brush-ink dark:text-brush-dark">Hedgeley Painting</span>
           </span>
           </div>
           <p className="max-w-xs text-sm leading-relaxed text-onnight/70">

@@ -1193,6 +1193,16 @@ html.has-brush [contenteditable="true"] {
   }
 }
 
+/* brush-word text color must be readable in both themes */
+[data-theme="light"] .brush-word {
+  color: var(--brush-ink) !important;
+}
+
+/* brush-word text color must be readable: dark on light surfaces, light on dark */
+[data-theme="dark"] .brush-word {
+  color: var(--brush-ink-dark) !important;
+}
+
 
 /* Accent text on dark panels (QuoteCTA, WhyMSM) must use lightened brush color */
 [class*="bg-night"] .gradient-text,

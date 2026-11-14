@@ -41,7 +41,7 @@ export function MeetPainter() {
               <PaintCard />
 
               <div className="glass-strong absolute -bottom-5 -right-3 rounded-[20px] px-5 py-4 shadow-[0_30px_70px_-30px_rgba(15,16,38,0.9)] sm:-right-6 bg-white/90 dark:bg-black/70 backdrop-blur-xl border border-white/60 dark:border-white/15">
-                <p className="font-display text-xl font-extrabold text-brush-paint dark:text-brush-paint">
+                <p className="font-display text-xl font-extrabold text-brush-ink dark:text-brush-ink">
                   Owner on every job
                 </p>
                 <p className="mt-1 text-xs font-bold uppercase tracking-wider text-ink dark:text-white/80">
@@ -53,7 +53,7 @@ export function MeetPainter() {
 
           <div>
             <Reveal>
-              <p className="eyebrow text-brush-ink-dark">Meet the owner</p>
+              <p className="eyebrow text-brush-ink">Meet the owner</p>
             </Reveal>
             <h2 className="relative mt-3 text-h2 font-extrabold text-balance w-fit max-w-full">
               <WordReveal text="You get the" accent="craftsman, not a call centre." brushWords={3} />

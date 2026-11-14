@@ -58,8 +58,8 @@ export function Header() {
       <div className="mx-auto flex h-[74px] max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" className="group flex items-center gap-2.5" aria-label={`${site.name} home`}>
           <span className="flex items-center gap-2">
-            <Image src="/logo.jpg" alt="Hedgeley Painting" height={40} width={160} className="h-10 w-auto object-contain" />
-            <span className="hidden sm:block font-display font-extrabold tracking-tight text-brush-paint">Hedgeley Painting</span>
+            <Image src="/logo.jpg" alt="Hedgeley Painting" height={40} width={160} className="h-10 w-auto object-contain rounded-lg mix-blend-mode:multiply" style={{ transition: "opacity 0.3s ease" }} />
+            <span className="hidden sm:block font-display font-extrabold tracking-tight text-brush-ink dark:text-brush-dark">Hedgeley Painting</span>
           </span>
         </Link>
 
@@ -73,7 +73,7 @@ export function Header() {
               <span className="relative z-10">{l.label}</span>
               <span
                 aria-hidden
-                className="absolute inset-x-4 bottom-2 h-[2px] origin-center scale-x-0 rounded-full bg-brush-paint transition-transform duration-300 group-hover:scale-x-100 dark:bg-brush-paint"
+                className="absolute inset-x-4 bottom-2 h-[2px] origin-center scale-x-0 rounded-full bg-brush-paint transition-transform duration-300 group-hover:scale-x-100 dark:bg-white"
               />
             </Link>
           ))}
